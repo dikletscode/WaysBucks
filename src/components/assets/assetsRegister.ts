@@ -12,15 +12,15 @@ import close from "./images/close.png";
 export const icon = {
   addProduct: addProduct,
   topping: topping,
-  product: product,
-  remove: remove,
   attach: attach,
+  remove: remove,
   logout: logout,
   profile: profile,
   close: close,
 };
 
 export const image = {
+  product: product,
   eatingPicture: bannerImage,
   background: background,
 };

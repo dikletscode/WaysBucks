@@ -7,8 +7,9 @@ import fetchData from "./validation/auth";
 import AuthContext from "../../../context/context";
 import { role } from "../../types/roleEnum";
 import { Link } from "react-router-dom";
+import { LoginProps } from "../../types/loginProps";
 
-const Login = () => {
+const Login: FC<LoginProps> = ({ isOpen, close, switchModal }) => {
   const [user, setUser] = useState<UserSignIn>({
     email: "",
     password: "",
@@ -47,32 +48,46 @@ const Login = () => {
   };
   return (
     <>
-      <div style={style.container}>
-        <img src={icon.close} alt="" style={style.close} />
-        <h1 style={style.title}>Login</h1>
-        <form action="" style={style.formInput} onSubmit={submit}>
-          <Input
-            type="email"
-            value={user.email}
-            name="email"
-            nameField="Email"
-            change={handleChange}
-          />
-          <Input
-            type="password"
-            value={user.password}
-            name="password"
-            nameField="Password"
-            change={handleChange}
-          />
-          <Submit value="Login" />
-        </form>
-        <p>{message}</p>
-        <p>
-          Dont have an account ? Klik{" "}
-          <span style={{ cursor: "pointer" }}>Here</span>
-        </p>
-      </div>
+      {isOpen ? (
+        <div style={style.container}>
+          <img src={icon.close} alt="" onClick={close} style={style.close} />
+          <h1
+            style={{
+              alignSelf: "flex-start",
+              color: "#BD0707",
+              paddingLeft: "10px",
+            }}
+          >
+            Login
+          </h1>
+          <form action="" style={style.formInput} onSubmit={submit}>
+            <Input
+              type="email"
+              value={user.email}
+              name="email"
+              nameField="Email"
+              change={handleChange}
+            />
+            <Input
+              type="password"
+              value={user.password}
+              name="password"
+              nameField="Password"
+              change={handleChange}
+            />
+            <Submit value="Login" />
+          </form>
+          <p>{message}</p>
+          <p>
+            Already have an account ? Klik{" "}
+            <span style={{ cursor: "pointer" }} onClick={switchModal}>
+              Here
+            </span>
+          </p>{" "}
+        </div>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
