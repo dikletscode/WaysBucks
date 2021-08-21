@@ -36,4 +36,9 @@ export const style = {
     top: "14px",
     right: "20px",
   } as CSSProperties,
+  title: {
+    alignSelf: "flex-start",
+    color: "#BD0707",
+    paddingLeft: "10px",
+  } as CSSProperties,
 };

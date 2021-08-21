@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
 import Input, { Submit } from "../../custom/components/input";
-import { style } from "./login.style";
+import { style } from "./form.style";
 import { icon } from "../../assets/assetsRegister";
 import { UserSignIn } from "../../types/auth";
 import fetchData from "./validation/auth";
@@ -49,15 +49,7 @@ const Login = () => {
     <>
       <div style={style.container}>
         <img src={icon.close} alt="" style={style.close} />
-        <h1
-          style={{
-            alignSelf: "flex-start",
-            color: "#BD0707",
-            paddingLeft: "10px",
-          }}
-        >
-          Login
-        </h1>
+        <h1 style={style.title}>Login</h1>
         <form action="" style={style.formInput} onSubmit={submit}>
           <Input
             type="email"
@@ -77,7 +69,7 @@ const Login = () => {
         </form>
         <p>{message}</p>
         <p>
-          Already have an account ? Klik{" "}
+          Dont have an account ? Klik{" "}
           <span style={{ cursor: "pointer" }}>Here</span>
         </p>
       </div>
