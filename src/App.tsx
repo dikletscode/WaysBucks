@@ -7,9 +7,11 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/fullHeader";
+import Cart from "./components/pages/cart/cart";
 import HomePage from "./components/pages/home/HomePage";
 import { role } from "./components/types/roleEnum";
 import AuthContext from "./context/context";
+import PrivateRoute from "./router/private";
 
 function App() {
   const { state, dispatch } = useContext(AuthContext);
@@ -32,6 +34,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Switch>
+        <PrivateRoute component={Cart} path="/cart" exact />
         <Route component={HomePage} path="/" />
       </Switch>
     </BrowserRouter>
