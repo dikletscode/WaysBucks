@@ -14,6 +14,8 @@ import loading from "./images/loading.gif";
 import starbak from "./product/starbak.jpeg";
 import logo from "./images/logoIcon.png";
 import barcode from "./images/barcode.png";
+import success from "./images/success.gif";
+import textOtw from "./images/text.png";
 
 export const icon = {
   addProduct: addProduct,
@@ -30,6 +32,7 @@ export const gif = {
   coffee: coffee,
   admin: admin,
   loading: loading,
+  success: success,
 };
 
 export const image = {
@@ -38,4 +41,5 @@ export const image = {
   background: background,
   logo: logo,
   barcode: barcode,
+  otw: textOtw,
 };

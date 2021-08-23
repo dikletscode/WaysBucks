@@ -23,3 +23,27 @@ export interface ProfileTypes {
     fullname: string;
   };
 }
+interface Topping {
+  title?: string;
+}
+
+interface Product {
+  image: string;
+  title: string;
+  topping: Topping[];
+  total: number;
+}
+
+export interface Transaction {
+  buyyer: {
+    address: string;
+    email: string;
+    name: string;
+    phone: string;
+    posCode: string;
+  };
+  cart: Product[];
+  orderDate: string;
+  paymentCode: string;
+  total: number;
+}

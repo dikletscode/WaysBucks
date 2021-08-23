@@ -63,7 +63,7 @@ const Detail = () => {
 
   useEffect(() => {
     if (price.length != 0 && count.length != 0) {
-      setTotal(calculate(count, price));
+      setTotal(calculate(count, price) + item.price);
     }
   }, [price, count]);
 
@@ -86,7 +86,7 @@ const Detail = () => {
     setKlik(arr);
   };
   const { cartState, increment } = useContext(CartContext);
-  console.log(topping);
+
   return (
     <div style={style.container}>
       <div style={style.left}>
@@ -134,7 +134,7 @@ const Detail = () => {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p> Total Pembayaran: </p>
-          <p> Rp.{convert((total + item.price).toString())} </p>
+          <p> Rp.{convert(total.toString())} </p>
         </div>
         <div>
           <form action="" onSubmit={submit}>

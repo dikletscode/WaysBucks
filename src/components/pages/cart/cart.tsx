@@ -1,11 +1,20 @@
-import { ChangeEvent, CSSProperties, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  CSSProperties,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import Input from "../../custom/components/input";
 import { gif, icon } from "../../assets/assetsRegister";
-
+import SuccessPayment from "../../modal/another/success";
+import { v4 as uuidv4 } from "uuid";
 import { useHistory } from "react-router-dom";
-
 import convert from "../../function/convertCurrency";
+import useLocalStorage from "../../custom/hooks/setLocalStorage";
+import EmptyCart from "../../modal/another/empty";
 
 interface Topping {
   id: string;
@@ -22,18 +31,52 @@ interface CartTypes {
   total: number;
   topping?: Topping[];
 }
+const calculate = (arr: number[], arr2: number[]) => {
+  let a = 0;
+  arr.map((item, index) => {
+    a += item * arr2[index];
+  });
+  return a;
+};
 
 const Cart = () => {
-  const [input, setInput] = useState({
+  const [buyyer, setBuyyer] = useState({
     name: "",
     email: "",
     phone: "",
     posCode: "",
     address: "",
   });
+  const [popup, setPopUp] = useState(false);
   const history = useHistory();
   const [cart, setCart] = useState<CartTypes[] | null>(null);
+  const [price, setPrice] = useState<number[]>([]);
+  const [total, setTotal] = useState(0);
+  const [count, setCount] = useState<number[]>([]);
+  const [value, setValue] = useLocalStorage("_transaction", []);
+
   let jsonCart = localStorage.getItem("_cart");
+
+  const formSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setValue((prev: any) => [
+      ...prev,
+
+      {
+        buyyer,
+        cart,
+        ["paymentCode"]: uuidv4(),
+        ["orderDate"]: new Date(),
+        total,
+      },
+    ]);
+
+    setPopUp(true);
+  };
+  useEffect(() => {
+    localStorage.setItem("_transaction", JSON.stringify(value));
+  }, [value, total, count, buyyer]);
 
   useEffect(() => {
     if (jsonCart) {
@@ -43,29 +86,42 @@ const Cart = () => {
   }, [jsonCart]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInput((prevInput: typeof input) => ({
+    setBuyyer((prevInput: typeof buyyer) => ({
       ...prevInput,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const PopUp = () => {
-    setTimeout(() => {
-      return history.push("/");
-    }, 3000);
-    return (
-      <div style={style.fitScreen}>
-        your cart is empty please check our product
-      </div>
-    );
+  useEffect(() => {
+    if (cart != null) {
+      setCount([...new Array(cart.length).fill(1)]);
+      cart.map((item, index) => {
+        setPrice((prev) => [...prev, item.total]);
+      });
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    if (price.length != 0 && count.length != 0) {
+      setTotal(calculate(count, price));
+    }
+  }, [price, count]);
+
+  const remove = (index: number) => {
+    if (cart != null) {
+      const copy = [...cart];
+      copy.splice(index, 1);
+      setCart(copy);
+      localStorage.setItem("_cart", JSON.stringify(copy));
+    }
   };
+
   if (cart == null) {
     return <img src={gif.loading} alt="" />;
   }
-  console.log(cart, "cart");
-
   return (
     <>
+      <SuccessPayment paymentCode={value["paymentCode"]} open={popup} />;
       {cart.length ? (
         <div style={style.container}>
           <div style={style.myCart}>
@@ -74,8 +130,8 @@ const Cart = () => {
 
               <hr />
             </div>
-            <div>
-              {cart.map((item: CartTypes) => {
+            <div style={style.myProduct}>
+              {cart.map((item: CartTypes, index) => {
                 return (
                   <>
                     <div
@@ -83,6 +139,7 @@ const Cart = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        padding: "0 10px",
                       }}
                     >
                       <div style={{ display: "flex", padding: "20px" }}>
@@ -108,11 +165,14 @@ const Cart = () => {
                           flexDirection: "column",
                         }}
                       >
-                        <p>
-                          Rp.{convert((item.price + item.total).toString())}
-                        </p>
+                        <p>Rp.{convert(item.total.toString())}</p>
                         <div style={{ alignSelf: "flex-end" }}>
-                          <img src={icon.remove} alt="" style={style.iconR} />
+                          <img
+                            src={icon.remove}
+                            alt=""
+                            style={style.iconR}
+                            onClick={() => remove(index)}
+                          />
                         </div>
                       </div>
                     </div>
@@ -123,8 +183,8 @@ const Cart = () => {
             <div style={style.priceQty}>
               <div style={{ width: "60%" }}>
                 <hr />
-                <p>Sub Total : </p>
-                <p>Qty : 2</p>
+                <p>Sub Total : {convert(total.toString())}</p>
+                <p>Qty : {cart.length}</p>
               </div>
               <div style={{ width: "40%" }}>
                 <div
@@ -139,31 +199,32 @@ const Cart = () => {
             </div>
           </div>
           <div style={style.form}>
-            <form action="">
+            <form action="" onSubmit={formSubmit}>
               <Input
                 name="name"
                 type="text"
-                value={input.name}
+                value={buyyer.name}
                 nameField="Name"
+                change={handleChange}
               />
               <Input
                 name="email"
                 type="text"
-                value={input.email}
+                value={buyyer.email}
                 nameField="Email"
                 change={handleChange}
               />
               <Input
                 name="phone"
                 type="text"
-                value={input.phone}
+                value={buyyer.phone}
                 nameField="phone"
                 change={handleChange}
               />
               <Input
-                name="poscode"
+                name="posCode"
                 type="number"
-                value={input.posCode}
+                value={buyyer.posCode}
                 nameField="Pos Code"
                 change={handleChange}
               />
@@ -174,10 +235,10 @@ const Cart = () => {
                   id=""
                   cols={40}
                   rows={5}
-                  value={input.address}
+                  value={buyyer.address}
                   placeholder="address"
                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                    setInput((prev) => ({
+                    setBuyyer((prev) => ({
                       ...prev,
                       [e.target.name]: e.target.value,
                     }));
@@ -194,7 +255,7 @@ const Cart = () => {
           </div>
         </div>
       ) : (
-        <PopUp />
+        <EmptyCart />
       )}
     </>
   );
@@ -203,7 +264,7 @@ const Cart = () => {
 const style = {
   container: {
     display: "flex",
-    padding: "30px 50px",
+    padding: "0px 50px",
   } as CSSProperties,
   imgProduct: {
     height: "140px",
@@ -213,11 +274,12 @@ const style = {
   myCart: {
     width: "53%",
     padding: "0 95px",
+    overflowX: "auto",
   } as CSSProperties,
 
   form: {
     width: "30%",
-    padding: "30px 40px 0 0",
+    padding: "68px 40px 0 0",
   } as CSSProperties,
   priceQty: {
     display: "flex",
@@ -235,6 +297,11 @@ const style = {
     position: "fixed",
     width: "100%",
     height: "100%",
+  } as CSSProperties,
+  myProduct: {
+    overflowY: "scroll",
+    height: "440px",
+    width: "100%",
   } as CSSProperties,
 };
 export default Cart;
