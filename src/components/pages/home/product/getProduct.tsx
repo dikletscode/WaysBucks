@@ -1,18 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import AuthContext, { EventContext } from "../../../../context/context";
 
-import { image } from "../../../assets/assetsRegister";
 import Login from "../../../modal/auth/login";
 import { ProductTypes } from "../../../types/interface";
 
 const Product = () => {
-  const [isKlik, setKlik] = useState(false);
   const { state } = useContext(AuthContext);
   const { eventState, eventDispatch } = useContext(EventContext);
   const [listProduct, setProduct] = useState<ProductTypes[]>([]);
   const history = useHistory();
-  const [img, setImg] = useState<any>();
 
   let productList = localStorage.getItem("_product");
   useEffect(() => {
@@ -31,7 +28,6 @@ const Product = () => {
   const clickProduct = (id: string, data: object) => {
     if (state.isLogin) {
       history.push({ pathname: "/product/" + id, state: data });
-      setKlik(true);
     } else {
       eventDispatch({ type: "MODAL_LOGIN", payload: true });
     }

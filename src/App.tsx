@@ -1,10 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import {
-  BrowserRouter,
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { gif } from "./components/assets/assetsRegister";
 import Header from "./components/header/header";
@@ -12,6 +7,7 @@ import Cart from "./components/pages/cart/cart";
 import Detail from "./components/pages/detail/detail";
 import HomePage from "./components/pages/home/HomePage";
 import AddProduct from "./components/pages/home/product/addProduct";
+import UserProfile from "./components/pages/profile/user";
 import AddTopping from "./components/pages/topping/addTopping";
 import { role } from "./components/types/roleEnum";
 import AuthContext from "./context/context";
@@ -38,7 +34,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <Router>
       <Header />
       <Switch>
         <Route component={HomePage} path="/" exact />
@@ -46,8 +42,9 @@ function App() {
         <PrivateRoute component={Detail} path="/product/:id" exact />
         <PrivateRoute component={AddTopping} path="/add/topping" exact />
         <PrivateRoute component={AddProduct} path="/add/product" exact />
+        <PrivateRoute component={UserProfile} path="/profile" exact />
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 }
 

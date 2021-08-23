@@ -15,3 +15,11 @@ export interface ProductTypes {
   price: number;
   title: string;
 }
+export interface ProfileTypes {
+  id: string;
+  email: number;
+  detail: {
+    avatar: string;
+    fullname: string;
+  };
+}

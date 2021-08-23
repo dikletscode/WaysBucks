@@ -1,16 +1,27 @@
-import {
-  ChangeEvent,
-  CSSProperties,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, CSSProperties, useEffect, useState } from "react";
 
 import Input from "../../custom/components/input";
-import { gif, icon, image } from "../../assets/assetsRegister";
-import useLocalStorage from "../../custom/hooks/setLocalStorage";
-import { Redirect, useHistory } from "react-router-dom";
-import { CartContext } from "../../../context/context";
+import { gif, icon } from "../../assets/assetsRegister";
+
+import { useHistory } from "react-router-dom";
+
+import convert from "../../function/convertCurrency";
+
+interface Topping {
+  id: string;
+  image: string;
+  price: number;
+  title?: string;
+}
+
+interface CartTypes {
+  id: string;
+  image: string;
+  price: number;
+  title: string;
+  total: number;
+  topping?: Topping[];
+}
 
 const Cart = () => {
   const [input, setInput] = useState({
@@ -20,9 +31,9 @@ const Cart = () => {
     posCode: "",
     address: "",
   });
-  const [cart, setCart] = useState<any>(null);
-  let jsonCart = localStorage.getItem("_cart");
   const history = useHistory();
+  const [cart, setCart] = useState<CartTypes[] | null>(null);
+  let jsonCart = localStorage.getItem("_cart");
 
   useEffect(() => {
     if (jsonCart) {
@@ -51,6 +62,7 @@ const Cart = () => {
   if (cart == null) {
     return <img src={gif.loading} alt="" />;
   }
+  console.log(cart, "cart");
 
   return (
     <>
@@ -63,7 +75,7 @@ const Cart = () => {
               <hr />
             </div>
             <div>
-              {cart.map((item: any) => {
+              {cart.map((item: CartTypes) => {
                 return (
                   <>
                     <div
@@ -73,11 +85,21 @@ const Cart = () => {
                         alignItems: "center",
                       }}
                     >
-                      <div style={{ display: "flex" }}>
+                      <div style={{ display: "flex", padding: "20px" }}>
                         <img src={item.image} alt="" style={style.imgProduct} />
-                        <div>
+                        <div style={{ paddingLeft: "20px" }}>
                           <h5>{item.title}</h5>
-                          <p style={{ fontSize: "0.8em" }}> Topping: COoklat</p>
+                          <p style={{ fontSize: "0.8em" }}>
+                            {" "}
+                            Topping:{" "}
+                            {item.topping ? (
+                              item.topping.map((item) => {
+                                return <small>{item.title}</small>;
+                              })
+                            ) : (
+                              <p> tidak ada</p>
+                            )}
+                          </p>
                         </div>
                       </div>
                       <div
@@ -86,32 +108,34 @@ const Cart = () => {
                           flexDirection: "column",
                         }}
                       >
-                        <p>Rp.24.000</p>
+                        <p>
+                          Rp.{convert((item.price + item.total).toString())}
+                        </p>
                         <div style={{ alignSelf: "flex-end" }}>
                           <img src={icon.remove} alt="" style={style.iconR} />
-                        </div>
-                      </div>
-                    </div>
-                    <div style={style.priceQty}>
-                      <div style={{ width: "60%" }}>
-                        <hr />
-                        <p>Sub Total : 20.000</p>
-                        <p>Qty : 2</p>
-                      </div>
-                      <div style={{ width: "40%" }}>
-                        <div
-                          style={{
-                            backgroundColor: "#E0C8C840",
-                            textAlign: "center",
-                          }}
-                        >
-                          <img src={icon.attach} />
                         </div>
                       </div>
                     </div>
                   </>
                 );
               })}
+            </div>
+            <div style={style.priceQty}>
+              <div style={{ width: "60%" }}>
+                <hr />
+                <p>Sub Total : </p>
+                <p>Qty : 2</p>
+              </div>
+              <div style={{ width: "40%" }}>
+                <div
+                  style={{
+                    backgroundColor: "#E0C8C840",
+                    textAlign: "center",
+                  }}
+                >
+                  <img src={icon.attach} />
+                </div>
+              </div>
             </div>
           </div>
           <div style={style.form}>

@@ -31,9 +31,13 @@ const Detail = () => {
   const [count, setCount] = useState<number[]>([]);
   const [cart, sendToCart] = useLocalStorage("_cart", []);
   const [topping, sendTopping] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendToCart((prev: any) => [...prev, { ...item, ...topping, total }]);
+    sendToCart((prev: any) => [
+      ...prev,
+      { ...item, ["topping"]: topping, total },
+    ]);
   };
 
   useEffect(() => {
@@ -57,10 +61,9 @@ const Detail = () => {
     });
   }, [value.length]);
 
-  const [total, setTotal] = useState(0);
   useEffect(() => {
     if (price.length != 0 && count.length != 0) {
-      setTotal(calculate(count, price) + item.price);
+      setTotal(calculate(count, price));
     }
   }, [price, count]);
 
@@ -86,7 +89,6 @@ const Detail = () => {
   console.log(topping);
   return (
     <div style={style.container}>
-      <p onClick={() => increment()}>Review Your Order </p>
       <div style={style.left}>
         <img src={item.image} alt="" style={style.image} />
       </div>

@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { style } from "../auth/form.style";
-import { gif } from "../../assets/assetsRegister";
+
 import { EventContext } from "../../../context/context";
 
 const Congrats = ({ animation }: { animation: string }) => {

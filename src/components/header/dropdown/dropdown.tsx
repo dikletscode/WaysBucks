@@ -60,7 +60,9 @@ const DropDown = ({
         ) : isOpen ? (
           <>
             <div style={style.triangle}></div>
-            <Image image={icon.profile} inner="Profile" />
+            <Link to="/profile">
+              <Image image={icon.profile} inner="Profile" />
+            </Link>
             <Image image={icon.logout} inner="Logout" klik={logoutAction} />
           </>
         ) : (
