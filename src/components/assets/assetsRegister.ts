@@ -8,6 +8,10 @@ import attach from "./images/attach.png";
 import logout from "./images/logout.png";
 import profile from "./images/profile.png";
 import close from "./images/close.png";
+import coffee from "./images/coffee.gif";
+import admin from "./images/admin.gif";
+import loading from "./images/loading.gif";
+import starbak from "./product/starbak.jpeg";
 
 export const icon = {
   addProduct: addProduct,
@@ -17,6 +21,13 @@ export const icon = {
   logout: logout,
   profile: profile,
   close: close,
+  starbak: starbak,
+};
+
+export const gif = {
+  coffee: coffee,
+  admin: admin,
+  loading: loading,
 };
 
 export const image = {

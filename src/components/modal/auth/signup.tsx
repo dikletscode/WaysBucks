@@ -21,44 +21,46 @@ const Signup: FC<LoginProps> = ({ isOpen, close, switchModal }) => {
   return (
     <>
       {isOpen ? (
-        <div style={style.container}>
-          <img
-            src={icon.close}
-            alt="close"
-            style={style.close}
-            onClick={close}
-          />
-          <h1 style={style.title}>Signup</h1>
-          <form action="" style={style.formInput}>
-            <Input
-              type="email"
-              value={user.email}
-              name="email"
-              nameField="Email"
-              change={handleChange}
+        <div style={style.fitScreen}>
+          <div style={style.container}>
+            <img
+              src={icon.close}
+              alt="close"
+              style={style.close}
+              onClick={close}
             />
-            <Input
-              type="password"
-              value={user.password}
-              name="password"
-              nameField="Password"
-              change={handleChange}
-            />
-            <Input
-              type="text"
-              value={user.fullName}
-              name="fullName"
-              nameField="Full Name"
-              change={handleChange}
-            />
-            <Submit value="Signin" />
-          </form>
-          <p>
-            Already have an account ? Klik{" "}
-            <span style={{ cursor: "pointer" }} onClick={switchModal}>
-              Here
-            </span>
-          </p>
+            <h1 style={style.title}>Signup</h1>
+            <form action="" style={style.formInput}>
+              <Input
+                type="email"
+                value={user.email}
+                name="email"
+                nameField="Email"
+                change={handleChange}
+              />
+              <Input
+                type="password"
+                value={user.password}
+                name="password"
+                nameField="Password"
+                change={handleChange}
+              />
+              <Input
+                type="text"
+                value={user.fullName}
+                name="fullName"
+                nameField="Full Name"
+                change={handleChange}
+              />
+              <Submit value="Signin" />
+            </form>
+            <p>
+              Already have an account ? Klik{" "}
+              <span style={{ cursor: "pointer" }} onClick={switchModal}>
+                Here
+              </span>
+            </p>
+          </div>
         </div>
       ) : (
         <></>

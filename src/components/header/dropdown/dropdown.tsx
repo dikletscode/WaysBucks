@@ -1,7 +1,7 @@
 import React, { CSSProperties, useContext, useState } from "react";
-import { icon } from "../../../assets/assetsRegister";
+import { icon } from "../../assets/assetsRegister";
 
-import AuthContext from "../../../../context/context";
+import AuthContext from "../../../context/context";
 import { Link } from "react-router-dom";
 
 const Image = ({
@@ -33,34 +33,40 @@ const DropDown = ({
   const { state, dispatch } = useContext(AuthContext);
 
   const logoutAction = () => {
+    close();
     localStorage.removeItem("_basicInfo");
     dispatch({ type: "LOGIN_FAILED", payload: null });
   };
-  console.log(isOpen);
+  console.log(isOpen, "opeen");
   return (
     <>
-      {state.isAdmin ? (
-        isOpen ? (
-          <div style={style.container} onMouseLeave={close}>
+      <div style={style.container} onMouseLeave={close}>
+        {state.isAdmin ? (
+          isOpen ? (
+            <>
+              <div style={style.triangle}></div>
+              <Link to="/add/product">
+                <Image image={icon.addProduct} inner="Add Product" />
+              </Link>
+              <Link to="/add/topping">
+                <Image image={icon.topping} inner="Add Topping" />
+              </Link>
+
+              <Image image={icon.logout} inner="Logout" klik={logoutAction} />
+            </>
+          ) : (
+            <></>
+          )
+        ) : isOpen ? (
+          <>
             <div style={style.triangle}></div>
-            <Link to="/add">
-              <Image image={icon.addProduct} inner="Add Product" />
-            </Link>
-            <Image image={icon.topping} inner="Add Topping" />
+            <Image image={icon.profile} inner="Profile" />
             <Image image={icon.logout} inner="Logout" klik={logoutAction} />
-          </div>
+          </>
         ) : (
           <></>
-        )
-      ) : isOpen ? (
-        <div style={style.container} onMouseLeave={close}>
-          <div style={style.triangle}></div>
-          <Image image={icon.profile} inner="Profile" />
-          <Image image={icon.logout} inner="Logout" klik={logoutAction} />
-        </div>
-      ) : (
-        <></>
-      )}
+        )}
+      </div>
     </>
   );
 };

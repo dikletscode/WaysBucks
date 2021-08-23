@@ -3,8 +3,7 @@
     "id": "01320321",
     "title": "Coffee Latte",
     "price": 25000,
-    "image": "http",
-    "url": "https://media-cdn.tripadvisor.com/media/photo-s/0d/69/c5/a1/cafe-latte.jpg"
+    "image": "https://media-cdn.tripadvisor.com/media/photo-s/0d/69/c5/a1/cafe-latte.jpg"
   },
   {
     "id": "01320322",
@@ -16,6 +15,6 @@
     "id": "01320323",
     "title": "Cendol coffee",
     "price": 25000,
-    "image": "https://images.unsplash.com/photo-1554600740-951beab4712b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y29mZmVlJTIwY3VwfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80"
+    "image": "https://media-cdn.tripadvisor.com/media/photo-s/0b/fb/ca/00/starbucks.jpg"
   }
 ]

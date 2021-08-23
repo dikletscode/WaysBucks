@@ -7,7 +7,7 @@ const style = {
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    padding: "0px 130px",
+    padding: "0px 100px",
     backgroundColor: "white",
   } as React.CSSProperties,
 

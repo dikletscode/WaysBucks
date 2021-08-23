@@ -1,62 +1,99 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Redirect, useHistory } from "react-router-dom";
+import AuthContext, { EventContext } from "../../../../context/context";
 
 import { image } from "../../../assets/assetsRegister";
+import Login from "../../../modal/auth/login";
+import { ProductTypes } from "../../../types/interface";
 
 const Product = () => {
   const [isKlik, setKlik] = useState(false);
-  const [listProduct, setProduct] = useState([]);
-  const toogle = () => {
-    if (isKlik == true) {
-      setKlik(false);
-    } else {
+  const { state } = useContext(AuthContext);
+  const { eventState, eventDispatch } = useContext(EventContext);
+  const [listProduct, setProduct] = useState<ProductTypes[]>([]);
+  const history = useHistory();
+  const [img, setImg] = useState<any>();
+
+  let productList = localStorage.getItem("_product");
+  useEffect(() => {
+    if (productList) {
+      setProduct(JSON.parse(productList));
+    }
+  }, [productList, listProduct.length]);
+
+  const close = () => {
+    eventDispatch({ type: "MODAL_LOGIN", payload: false });
+  };
+  const switchModal = (field: string, to: string) => {
+    eventDispatch({ type: field, payload: false });
+    eventDispatch({ type: to, payload: true });
+  };
+  const clickProduct = (id: string, data: object) => {
+    if (state.isLogin) {
+      history.push({ pathname: "/product/" + id, state: data });
       setKlik(true);
+    } else {
+      eventDispatch({ type: "MODAL_LOGIN", payload: true });
     }
   };
 
-  return (
-    <>
-      <div style={style.product}>
-        <div style={{ backgroundColor: "#F7DADA" }} onClick={() => toogle()}>
-          <img
-            src={image.product}
-            alt=""
-            style={
-              isKlik
-                ? { ...style.productImage, ["opacity"]: 0.5 }
-                : style.productImage
-            }
-          />
-          <div style={style.desc}>
-            <div style={{ padding: "0 0 6px 6px" }}>
-              <p style={{ color: "#BD0707", fontSize: "1em" }}>
-                Coffee Grean Tea
-              </p>
-              <p style={{ color: "#BD0707", fontSize: "0.9em" }}>Rp.25.000</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  if (!listProduct.length) {
+    return <></>;
+  } else {
+    return (
+      <>
+        {listProduct.map((item) => {
+          return (
+            <>
+              <Login
+                isOpen={eventState.klik}
+                close={close}
+                switchModal={() => switchModal("MODAL_SIGNIN", "MODAL_LOGIN")}
+              />
+              <div
+                style={style.product}
+                key={item.id}
+                onClick={() => clickProduct(item.id, item)}
+              >
+                <div style={{ backgroundColor: "#F7DADA" }}>
+                  <img src={item.image} alt="" style={style.productImage} />
+                  <div style={style.desc}>
+                    <div style={{ padding: "0 0 6px 6px" }}>
+                      <p style={{ color: "#BD0707", fontSize: "1em" }}>
+                        {item.title}
+                      </p>
+                      <p style={{ color: "#BD0707", fontSize: "0.9em" }}>
+                        Rp.{item.price}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        })}
+      </>
+    );
+  }
 };
 export default Product;
 
 const style = {
   product: {
     height: "300px",
-    width: "190px",
+    width: "200px",
     flexDirection: "column",
     display: "flex",
     alignItems: "center",
     borderRadius: "10px",
     lineHeight: "4px",
-
-    padding: "0 50px 40px 0",
+    padding: "18px 40px 40px 40px",
   } as React.CSSProperties,
   productImage: {
-    width: "190px",
-    height: "250px",
+    width: "220px",
+    height: "270px",
     borderRadius: "10px 10px 0 0",
+    objectFit: "cover",
   } as React.CSSProperties,
   desc: {
     width: "100%",

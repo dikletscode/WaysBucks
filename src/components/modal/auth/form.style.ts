@@ -41,4 +41,11 @@ export const style = {
     color: "#BD0707",
     paddingLeft: "10px",
   } as CSSProperties,
+
+  fitScreen: {
+    backgroundColor: "rgba(0,0,0,0.6)",
+    position: "fixed",
+    width: "100%",
+    height: "100%",
+  } as CSSProperties,
 };

@@ -6,17 +6,16 @@ const buttonStyle = {
 
 const Button = ({
   open,
-  isOpen,
   value,
   style,
 }: {
   open: () => void;
-  isOpen: boolean;
+
   value: string;
   style: {};
 }) => {
   return (
-    <div style={isOpen ? buttonStyle : { ...buttonStyle, zIndex: 0 }}>
+    <div style={buttonStyle}>
       <button onClick={open} style={style}>
         {value}
       </button>
