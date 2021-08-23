@@ -75,9 +75,9 @@ const style = {
 
   order: {
     color: "#BD0707",
-    fontFamily: "cursive",
     fontStyle: "normal",
-    fontWeight: 900,
+    fontFamily: " 'Klee One', cursive",
+    fontWeight: 1200,
     fontSize: "36px",
     lineHeight: "10px",
   } as React.CSSProperties,

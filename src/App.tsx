@@ -10,13 +10,16 @@ import AddProduct from "./components/pages/home/product/addProduct";
 import UserProfile from "./components/pages/profile/user";
 import AddTopping from "./components/pages/topping/addTopping";
 import { role } from "./components/types/roleEnum";
-import AuthContext from "./context/context";
+import AuthContext, { CartContext } from "./context/context";
 import PrivateRoute from "./router/private";
+import Dashboard from "./components/pages/dashboard/admin";
 
 function App() {
   const { state, dispatch } = useContext(AuthContext);
+  const { increment } = useContext(CartContext);
 
   const loginUser = localStorage.getItem("_basicInfo");
+  const cart = localStorage.getItem("_cart");
   useEffect(() => {
     const user = JSON.parse(loginUser || "{}");
     if (loginUser) {
@@ -29,6 +32,14 @@ function App() {
       dispatch({ type: "LOGIN_FAILED", payload: null });
     }
   }, [loginUser]);
+
+  useEffect(() => {
+    if (cart) {
+      const cartLength = JSON.parse(cart);
+      increment(cartLength.length);
+    }
+  }, [cart]);
+
   if (state == null) {
     return <img src={gif.loading} alt="" />;
   }
@@ -43,6 +54,7 @@ function App() {
         <PrivateRoute component={AddTopping} path="/add/topping" exact />
         <PrivateRoute component={AddProduct} path="/add/product" exact />
         <PrivateRoute component={UserProfile} path="/profile" exact />
+        <PrivateRoute component={Dashboard} path="/dashboard" exact />
       </Switch>
     </Router>
   );

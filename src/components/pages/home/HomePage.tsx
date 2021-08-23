@@ -18,7 +18,8 @@ const HomePage = () => {
                 </h1>
                 <div
                   style={{
-                    fontSize: "1.2vw",
+                    fontSize: "1.4vw",
+                    fontFamily: " 'Klee One', cursive",
                     fontStyle: "normal",
                     fontWeight: 300,
                     lineHeight: "20px",

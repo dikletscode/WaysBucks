@@ -32,8 +32,11 @@ const Detail = () => {
   const [cart, sendToCart] = useLocalStorage("_cart", []);
   const [topping, sendTopping] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
+  const { increment } = useContext(CartContext);
+
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     sendToCart((prev: any) => [
       ...prev,
       { ...item, ["topping"]: topping, total },
@@ -69,7 +72,8 @@ const Detail = () => {
 
   useEffect(() => {
     sendTopping(getTopping(klik, value));
-  }, [klik, value]);
+    increment(cart.length);
+  }, [klik, value, cart]);
 
   const select = (index: number) => {
     const arr = [...klik];
@@ -85,7 +89,6 @@ const Detail = () => {
     setCount(counts);
     setKlik(arr);
   };
-  const { cartState, increment } = useContext(CartContext);
 
   return (
     <div style={style.container}>

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext, { CartContext } from "../../../context/context";
+import { image } from "../../assets/assetsRegister";
 import cart from "./cart.png";
 
 const Icon = ({ toogle }: { toogle: () => void }) => {
@@ -10,7 +11,17 @@ const Icon = ({ toogle }: { toogle: () => void }) => {
   return (
     <div style={{ display: "flex" }}>
       {state.isAdmin ? (
-        <></>
+        <Link to="/dashboard">
+          <img
+            src={image.dasboard}
+            alt=""
+            style={{
+              height: "40px",
+              width: "40px",
+              padding: "10px",
+            }}
+          />
+        </Link>
       ) : (
         <div>
           <Link to="/cart">

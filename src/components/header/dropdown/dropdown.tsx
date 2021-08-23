@@ -18,7 +18,16 @@ const Image = ({
       style={{ padding: "20px", display: "flex", cursor: "pointer" }}
       onClick={klik}
     >
-      <img src={image} style={{ height: "20px", width: "20px" }} /> {inner}
+      <img
+        src={image}
+        style={{
+          height: "20px",
+          width: "20px",
+          objectFit: "cover",
+          paddingRight: "10px",
+        }}
+      />{" "}
+      {inner}
     </div>
   );
 };

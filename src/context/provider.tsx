@@ -12,7 +12,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
   });
   const [cartState, setCartState] = React.useState(0);
 
-  const increment = () => setCartState(cartState + 1);
+  const increment = (state: number) => setCartState(state);
 
   return (
     <EventContext.Provider value={{ eventState, eventDispatch }}>

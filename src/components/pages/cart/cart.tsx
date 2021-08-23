@@ -2,6 +2,7 @@ import {
   ChangeEvent,
   CSSProperties,
   FormEvent,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -15,6 +16,8 @@ import { useHistory } from "react-router-dom";
 import convert from "../../function/convertCurrency";
 import useLocalStorage from "../../custom/hooks/setLocalStorage";
 import EmptyCart from "../../modal/another/empty";
+import { enumTransaction } from "../../types/roleEnum";
+import { CartContext } from "../../../context/context";
 
 interface Topping {
   id: string;
@@ -69,6 +72,7 @@ const Cart = () => {
         ["paymentCode"]: uuidv4(),
         ["orderDate"]: new Date(),
         total,
+        status: enumTransaction.WAIT,
       },
     ]);
 
@@ -117,8 +121,13 @@ const Cart = () => {
   };
 
   if (cart == null) {
-    return <img src={gif.loading} alt="" />;
+    return (
+      <>
+        <EmptyCart />
+      </>
+    );
   }
+
   return (
     <>
       <SuccessPayment paymentCode={value["paymentCode"]} open={popup} />;
@@ -183,8 +192,15 @@ const Cart = () => {
             <div style={style.priceQty}>
               <div style={{ width: "60%" }}>
                 <hr />
-                <p>Sub Total : {convert(total.toString())}</p>
+                <p>
+                  Sub Total :{" "}
+                  {price.length
+                    ? convert(price[price.length - 1].toString())
+                    : convert(total.toString())}
+                </p>
                 <p>Qty : {cart.length}</p>
+                <hr />
+                <p> Total : {convert(total.toString())}</p>
               </div>
               <div style={{ width: "40%" }}>
                 <div
@@ -269,6 +285,7 @@ const style = {
   imgProduct: {
     height: "140px",
     width: "100px",
+    objectFit: "cover",
   } as CSSProperties,
 
   myCart: {

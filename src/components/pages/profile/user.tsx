@@ -6,6 +6,8 @@ import React, {
   useState,
 } from "react";
 import { gif, icon, image } from "../../assets/assetsRegister";
+import { Submit } from "../../custom/components/input";
+import convert from "../../function/convertCurrency";
 import { ProfileTypes, Transaction } from "../../types/interface";
 
 const UserProfile = () => {
@@ -111,12 +113,14 @@ const UserProfile = () => {
                     value={data.detail.fullname}
                     onChange={changeFullname}
                   />
-                  <input type="submit" />
+                  <Submit value="submit" styles={{ width: "80px" }} />
                 </form>
               ) : (
                 <>
                   <p>{data.detail.fullname}</p>
-                  <button onClick={() => toogle("fullname")}>edit</button>
+                  <button onClick={() => toogle("fullname")} style={style.edit}>
+                    edit
+                  </button>
                 </>
               )}
             </div>
@@ -134,9 +138,9 @@ const UserProfile = () => {
             <div
               key={item.paymentCode}
               style={{
-                backgroundColor: "#F7DADA",
+                backgroundColor: "white",
                 display: "flex",
-                padding: "15px 10px",
+                padding: "15px 0px",
                 justifyContent: "space-around",
                 alignItems: "center",
                 alignContent: "center",
@@ -144,82 +148,91 @@ const UserProfile = () => {
             >
               <div
                 style={{
-                  width: "60%",
+                  backgroundColor: "#F7DADA",
                   display: "flex",
-                  alignItems: "center",
-                  alignContent: "center",
-                  flexDirection: "column",
+                  padding: "0 0 10px 30px",
+                  width: "100%",
                 }}
               >
-                {item.cart.map((item2) => {
-                  return (
-                    <div
-                      style={{
-                        display: "flex",
-                        padding: "20px",
-                        width: "100%",
-                        alignContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <div>
-                        <img
-                          src={item2.image}
-                          alt=""
-                          style={{
-                            height: "120px",
-                            width: "100px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          padding: "0 10px",
-                          color: "#BD0707",
-                          fontFamily: "'Josefin Sans', sans-serif",
-                        }}
-                      >
-                        <h3>Ice Cofee palm sugar</h3>
-                        <p>{new Date(item.orderDate).toDateString()}</p>
-                        <p>
-                          Topping:
-                          {item2.topping.map((item3) => {
-                            return " " + item3.title + ",";
-                          })}
-                        </p>
-
-                        <p>Price: 27.000</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div>
                 <div
                   style={{
+                    width: "60%",
                     display: "flex",
-                    flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "space-evenly",
+                    alignContent: "center",
+                    flexDirection: "column",
                   }}
                 >
-                  <img
-                    src={image.logo}
-                    alt=""
-                    style={{ padding: "50px", height: "70px", width: "70px" }}
-                  />
-                  <img
-                    src={image.barcode}
-                    alt=""
+                  {item.cart.map((item2) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          padding: "20px",
+                          width: "100%",
+                          alignContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <img
+                            src={item2.image}
+                            alt=""
+                            style={{
+                              height: "120px",
+                              width: "100px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            padding: "0 10px",
+                            color: "#BD0707",
+                            fontFamily: "'Josefin Sans', sans-serif",
+                          }}
+                        >
+                          <h3>Ice Cofee palm sugar</h3>
+                          <p>{new Date(item.orderDate).toDateString()}</p>
+                          <p>
+                            Topping:
+                            {item2.topping.map((item3) => {
+                              return " " + item3.title + ",";
+                            })}
+                          </p>
+
+                          <p>Price: {convert(item2.price.toString())}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div>
+                  <div
                     style={{
-                      padding: "0 0 10px 0",
-                      height: "120px",
-                      width: "120px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "space-evenly",
                     }}
-                  />
-                  <img src={image.otw} alt="" />
-                  <p>SubTotal : {item.total}</p>
+                  >
+                    <img
+                      src={image.logo}
+                      alt=""
+                      style={{ padding: "50px", height: "70px", width: "70px" }}
+                    />
+                    <img
+                      src={image.barcode}
+                      alt=""
+                      style={{
+                        padding: "0 0 10px 0",
+                        height: "120px",
+                        width: "120px",
+                      }}
+                    />
+                    <img src={image.otw} alt="" />
+                    <p>SubTotal : {item.total}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -278,5 +291,13 @@ const style = {
     width: "100px",
     borderRadius: "50%",
     objectFit: "cover",
+  } as React.CSSProperties,
+
+  edit: {
+    padding: "5px 15px",
+    color: "white",
+    borderRadius: "5px",
+    border: "none",
+    backgroundColor: "#0ACF83",
   } as React.CSSProperties,
 };

@@ -16,6 +16,8 @@ import logo from "./images/logoIcon.png";
 import barcode from "./images/barcode.png";
 import success from "./images/success.gif";
 import textOtw from "./images/text.png";
+import dashboard from "./images/dasboard.png";
+import empty from "./images/empty.gif";
 
 export const icon = {
   addProduct: addProduct,
@@ -33,6 +35,7 @@ export const gif = {
   admin: admin,
   loading: loading,
   success: success,
+  empty: empty,
 };
 
 export const image = {
@@ -42,4 +45,5 @@ export const image = {
   logo: logo,
   barcode: barcode,
   otw: textOtw,
+  dasboard: dashboard,
 };

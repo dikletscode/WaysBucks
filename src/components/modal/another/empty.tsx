@@ -1,5 +1,6 @@
 import { CSSProperties, FC } from "react";
 import { useHistory } from "react-router-dom";
+import { gif } from "../../assets/assetsRegister";
 
 const EmptyCart = () => {
   let history = useHistory();
@@ -11,6 +12,7 @@ const EmptyCart = () => {
   return (
     <>
       <div style={style.container}>
+        <img src={gif.empty} alt="" />
         your cart is empty please check our product
       </div>
     </>
@@ -20,6 +22,7 @@ export default EmptyCart;
 
 const style = {
   container: {
+    fontSize: "2em",
     padding: "45px",
     height: "45%",
     display: "flex",

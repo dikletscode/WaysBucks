@@ -54,7 +54,7 @@ const Product = () => {
                 <div style={{ backgroundColor: "#F7DADA" }}>
                   <img src={item.image} alt="" style={style.productImage} />
                   <div style={style.desc}>
-                    <div style={{ padding: "0 0 6px 6px" }}>
+                    <div style={{ padding: "0 0 12px 12px" }}>
                       <p style={{ color: "#BD0707", fontSize: "1em" }}>
                         {item.title}
                       </p>
@@ -84,6 +84,7 @@ const style = {
     borderRadius: "10px",
     lineHeight: "4px",
     padding: "18px 40px 40px 40px",
+    fontFamily: " 'Klee One', cursive",
   } as React.CSSProperties,
   productImage: {
     width: "220px",

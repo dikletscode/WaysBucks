@@ -12,7 +12,7 @@ export const EventContext = createContext<{
 
 export const CartContext = createContext<{
   cartState: number;
-  increment: () => void;
+  increment: (state: number) => void;
 }>({ cartState: 0, increment: () => undefined });
 
 export default AuthContext;

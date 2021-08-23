@@ -32,6 +32,7 @@ interface Product {
   title: string;
   topping: Topping[];
   total: number;
+  price: number;
 }
 
 export interface Transaction {
@@ -46,4 +47,5 @@ export interface Transaction {
   orderDate: string;
   paymentCode: string;
   total: number;
+  status: string;
 }
