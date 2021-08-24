@@ -119,19 +119,14 @@ const Cart = () => {
       localStorage.setItem("_cart", JSON.stringify(copy));
     }
   };
-
   if (cart == null) {
-    return (
-      <>
-        <EmptyCart />
-      </>
-    );
+    return <img src={gif.loading} alt="" />;
   }
 
   return (
     <>
       <SuccessPayment paymentCode={value["paymentCode"]} open={popup} />;
-      {cart.length ? (
+      {cart ? (
         <div style={style.container}>
           <div style={style.myCart}>
             <div>
@@ -154,8 +149,8 @@ const Cart = () => {
                       <div style={{ display: "flex", padding: "20px" }}>
                         <img src={item.image} alt="" style={style.imgProduct} />
                         <div style={{ paddingLeft: "20px" }}>
-                          <h5>{item.title}</h5>
-                          <p style={{ fontSize: "0.8em" }}>
+                          <h3>{item.title}</h3>
+                          <p style={{ fontSize: "0.9em" }}>
                             {" "}
                             Topping:{" "}
                             {item.topping ? (
@@ -191,7 +186,7 @@ const Cart = () => {
             </div>
             <div style={style.priceQty}>
               <div style={{ width: "60%" }}>
-                <hr />
+                {Hr}
                 <p>
                   Sub Total :{" "}
                   {price.length
@@ -199,7 +194,7 @@ const Cart = () => {
                     : convert(total.toString())}
                 </p>
                 <p>Qty : {cart.length}</p>
-                <hr />
+                {Hr}
                 <p> Total : {convert(total.toString())}</p>
               </div>
               <div style={{ width: "40%" }}>
@@ -277,6 +272,8 @@ const Cart = () => {
   );
 };
 
+const Hr = <hr style={{ border: "1px solid  #BD0707" }} />;
+
 const style = {
   container: {
     display: "flex",
@@ -284,14 +281,16 @@ const style = {
   } as CSSProperties,
   imgProduct: {
     height: "140px",
-    width: "100px",
+    width: "110px",
     objectFit: "cover",
+    borderRadius: "8px",
   } as CSSProperties,
 
   myCart: {
     width: "53%",
     padding: "0 95px",
     overflowX: "auto",
+    color: "#BD0707",
   } as CSSProperties,
 
   form: {
@@ -319,6 +318,7 @@ const style = {
     overflowY: "scroll",
     height: "440px",
     width: "100%",
+    color: "#BD0707",
   } as CSSProperties,
 };
 export default Cart;

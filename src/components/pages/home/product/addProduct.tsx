@@ -74,6 +74,7 @@ const AddProduct = () => {
   return (
     <div style={style.container}>
       <div style={style.form}>
+        <h1 style={{ color: "#BD0707" }}>Add Product</h1>
         <form action="" onSubmit={submit}>
           <Input
             name="title"
@@ -100,7 +101,7 @@ const AddProduct = () => {
         </form>
       </div>
       <div style={style.preview}>
-        <h4>Image Preview</h4>
+        <h3 style={{ color: "#BD0707" }}>Image Preview</h3>
         <img
           src={input.image || icon.starbak}
           style={{

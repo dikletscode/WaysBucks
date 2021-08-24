@@ -18,6 +18,8 @@ import success from "./images/success.gif";
 import textOtw from "./images/text.png";
 import dashboard from "./images/dasboard.png";
 import empty from "./images/empty.gif";
+import check from "./images/check.png";
+import cancel from "./images/cancel.png";
 
 export const icon = {
   addProduct: addProduct,
@@ -46,4 +48,6 @@ export const image = {
   barcode: barcode,
   otw: textOtw,
   dasboard: dashboard,
+  check: check,
+  cancel: cancel,
 };

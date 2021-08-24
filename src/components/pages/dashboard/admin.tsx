@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { gif } from "../../assets/assetsRegister";
+import { gif, icon, image } from "../../assets/assetsRegister";
 import { Transaction } from "../../types/interface";
 import { enumTransaction } from "../../types/roleEnum";
 
 const Dashboard = () => {
   const getTransaction = localStorage.getItem("_transaction");
   const [state, setState] = useState<Transaction[]>([]);
-
+  const sucess = (index: number) => {
+    let copy: any = [...state];
+    copy[index].status = enumTransaction.SUCCESS;
+    setState(copy);
+    localStorage.setItem("_transaction", JSON.stringify(copy));
+  };
+  const cancel = (index: number) => {
+    let copy: any = [...state];
+    copy[index].status = enumTransaction.CANCEL;
+    setState(copy);
+    localStorage.setItem("_transaction", JSON.stringify(copy));
+  };
   useEffect(() => {
     if (getTransaction) {
       setState(JSON.parse(getTransaction));
@@ -49,7 +60,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {state.map((row) => {
+          {state.map((row, index) => {
             return (
               <tr>
                 <Row children={row.paymentCode} />
@@ -57,22 +68,31 @@ const Dashboard = () => {
                 <Row children={row.buyyer.address} />
                 <Row children={row.buyyer.posCode} />
                 <Row children={row.total.toString()} />
-                <Row children={row.status} />
+                <Row children={row.status || "Cancel"} />
                 <Row
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                   }}
                 >
-                  {}
-                  <Button
-                    inner="Cancel"
-                    style={{ backgroundColor: "#FF0742" }}
-                  />
-                  <Button
-                    inner="Approve"
-                    style={{ backgroundColor: "#0ACF83" }}
-                  />
+                  {row.status == enumTransaction.WAIT ? (
+                    <>
+                      <Button
+                        inner="Cancel"
+                        style={{ backgroundColor: "#FF0742" }}
+                        klik={() => cancel(index)}
+                      />
+                      <Button
+                        inner="Approve"
+                        style={{ backgroundColor: "#0ACF83" }}
+                        klik={() => sucess(index)}
+                      />
+                    </>
+                  ) : row.status == enumTransaction.SUCCESS ? (
+                    <img src={image.check} alt="" />
+                  ) : (
+                    <img src={image.cancel} alt="" />
+                  )}
                 </Row>
               </tr>
             );
@@ -96,12 +116,15 @@ const Row = ({
 const Button = ({
   inner,
   style,
+  klik,
 }: {
   inner: string;
   style?: React.CSSProperties;
+  klik?: () => void;
 }) => {
   return (
     <button
+      onClick={klik}
       style={{
         padding: "5px 15px",
         color: "white",
