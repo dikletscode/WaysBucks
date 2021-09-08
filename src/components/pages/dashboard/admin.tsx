@@ -1,137 +1,162 @@
 import React, { useEffect, useState } from "react";
+import { FC } from "react";
+import {
+  allTransaction,
+  HistoryTransaction,
+  updateTransaction,
+} from "../../../services/transaction";
 import { gif, icon, image } from "../../assets/assetsRegister";
-import { Transaction } from "../../types/interface";
 import { enumTransaction } from "../../types/roleEnum";
 
 const Dashboard = () => {
-  const getTransaction = localStorage.getItem("_transaction");
-  const [state, setState] = useState<Transaction[]>([]);
-  const sucess = (index: number) => {
-    let copy: any = [...state];
-    copy[index].status = enumTransaction.SUCCESS;
-    setState(copy);
-    localStorage.setItem("_transaction", JSON.stringify(copy));
+  // const [state, setState] = useState<HistoryTransaction[]>([]);
+  const [transac, setTransac] = useState<HistoryTransaction[]>([]);
+
+  const actionTransac = (id: number, status: string) => {
+    const action = async () => {
+      try {
+        await updateTransaction(id, status);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    action();
   };
-  const cancel = (index: number) => {
-    let copy: any = [...state];
-    copy[index].status = enumTransaction.CANCEL;
-    setState(copy);
-    localStorage.setItem("_transaction", JSON.stringify(copy));
-  };
-  useEffect(() => {
-    if (getTransaction) {
-      setState(JSON.parse(getTransaction));
+
+  const getTransac = async () => {
+    try {
+      let data = await allTransaction();
+      if (data) {
+        setTransac(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [getTransaction]);
-  if (state.length == 0) {
+  };
+
+  useEffect(() => {
+    getTransac();
+  }, []);
+  if (!transac.length) {
     return <img src={gif.loading} alt="" />;
   }
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <h1>Income Transaction</h1>
-      <table
-        style={{
-          width: "90%",
-          textAlign: "center",
-          border: "1px solid #828282",
-          borderRadius: "0px 1px 0px 0px;",
-          fontFamily: "sans-serif",
-          color: "#232323",
-          borderCollapse: "collapse",
-        }}
-      >
-        <thead style={{ backgroundColor: "whitesmoke" }}>
-          <tr>
-            <Row children="No" />
-            <Row children="Name" />
-            <Row children="Address" />
-            <Row children="Post Code" />
-            <Row children="Income" />
-            <Row children="Status" />
-            <Row children="Action" />
-          </tr>
-        </thead>
-        <tbody>
-          {state.map((row, index) => {
-            return (
-              <tr>
-                <Row children={row.paymentCode} />
-                <Row children={row.buyyer.name} />
-                <Row children={row.buyyer.address} />
-                <Row children={row.buyyer.posCode} />
-                <Row children={row.total.toString()} />
-                <Row children={row.status || "Cancel"} />
-                <Row
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {row.status == enumTransaction.WAIT ? (
-                    <>
-                      <Button
-                        inner="Cancel"
-                        style={{ backgroundColor: "#FF0742" }}
-                        klik={() => cancel(index)}
-                      />
-                      <Button
-                        inner="Approve"
-                        style={{ backgroundColor: "#0ACF83" }}
-                        klik={() => sucess(index)}
-                      />
-                    </>
-                  ) : row.status == enumTransaction.SUCCESS ? (
-                    <img src={image.check} alt="" />
-                  ) : (
-                    <img src={image.cancel} alt="" />
-                  )}
-                </Row>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="pt-32  container mx-auto">
+      <div className="px-16 mx-auto ">
+        <h1 className="font-light text-base text-2xl">Income Transaction</h1>
+        <table className="text-center w-full ">
+          <thead style={{ backgroundColor: "whitesmoke" }}>
+            <tr>
+              <Row children="No" />
+              <Row children="Name" />
+              <Row children="Address" />
+              <Row children="Post Code" />
+              <Row children="Income" />
+              <Row children="Status" />
+              <Row children="Action" />
+            </tr>
+          </thead>
+          <tbody>
+            {transac.map((row, index) => {
+              return (
+                <tr>
+                  <Row children={index + 1} />
+                  <Row children={row.orderUser.fullname} />
+                  <Row children={row.orderUser.address} />
+                  <Row children={row.orderUser.postCode} />
+                  <Row children={row.totalPrice} />
+                  <Row>
+                    {" "}
+                    <StatusTransac status={row.status} />
+                  </Row>
+
+                  <Row custom="flex justify-between w-34 ">
+                    {row.status == enumTransaction.WAIT ? (
+                      <>
+                        <Button
+                          inner="Cancel"
+                          custom="bg-red-500 "
+                          klik={() =>
+                            actionTransac(row.id, enumTransaction.CANCEL)
+                          }
+                        />
+                        <Button
+                          inner="Approve"
+                          custom="bg-green-500"
+                          klik={() =>
+                            actionTransac(row.id, enumTransaction.OTW)
+                          }
+                        />
+                      </>
+                    ) : row.status === enumTransaction.SUCCESS ||
+                      row.status === enumTransaction.OTW ? (
+                      <img src={image.check} alt="" className="mx-auto" />
+                    ) : (
+                      <img src={image.cancel} alt="" className="mx-auto" />
+                    )}
+                  </Row>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
+};
+
+export const StatusTransac: FC<{ status: string }> = ({ status }) => {
+  switch (status) {
+    case enumTransaction.WAIT:
+      return <p className="text-yellow-400">{status}</p>;
+    case enumTransaction.SUCCESS:
+      return <p className="text-green-500">{status}</p>;
+    case enumTransaction.OTW:
+      return <p className="text-blue-400">{status}</p>;
+    case enumTransaction.CANCEL:
+      return <p className="text-red-500">{status}</p>;
+    default:
+      return <p className="text-red-500">Cancel</p>;
+  }
 };
 
 const Row = ({
   children,
   style,
+  custom,
 }: {
   children?: React.ReactNode;
   style?: React.CSSProperties;
+  custom?: string;
 }) => {
-  return <td style={{ padding: "20px", ...style }}>{children}</td>;
+  return (
+    <td className={custom} style={{ padding: "20px", ...style }}>
+      {children}
+    </td>
+  );
 };
 
 const Button = ({
   inner,
-  style,
+  custom,
   klik,
 }: {
   inner: string;
-  style?: React.CSSProperties;
+  custom: string;
   klik?: () => void;
 }) => {
   return (
     <button
       onClick={klik}
-      style={{
-        padding: "5px 15px",
-        color: "white",
-        borderRadius: "5px",
-        border: "none",
-        ...style,
-      }}
+      // style={{
+      //   padding: "5px 15px",
+      //   color: "white",
+      //   borderRadius: "5px",
+      //   border: "none",
+      //   ...style,
+      // }}
+      className={`h-7 w-20 ${custom} text-white `}
     >
       {inner}
     </button>

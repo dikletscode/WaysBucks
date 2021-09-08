@@ -21,7 +21,7 @@ const style = {
     backgroundImage: `url("${image.background}")`,
     height: "100%",
     display: "flex",
-    width: "90%",
+    width: "100%",
     alignItems: "center",
     backgroundSize: "100%",
     justifyContent: "space-around",
@@ -42,12 +42,12 @@ const style = {
     flexWrap: "wrap",
     width: "100%",
     justifyContent: "flex-start",
-    padding: 0,
+    padding: "0 70px",
   } as React.CSSProperties,
 
   imageBanner: {
     height: "100%",
-    width: "98%",
+    width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",

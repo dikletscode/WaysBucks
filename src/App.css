@@ -7,12 +7,6 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -23,9 +17,51 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+::-webkit-scrollbar {
+  width: 10px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: white;
+}
 .App-link {
   color: #61dafb;
+}
+#statusTxt {
+  text-align: center;
+  animation: blur 2s ease-out infinite;
+}
+@keyframes blur {
+  from {
+    background-color: skyblue;
+    color: white;
+    background-size: cover;
+  }
+}
+#news {
+  animation: fadein 3s infinite;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes App-logo-spin {

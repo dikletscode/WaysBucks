@@ -6,6 +6,7 @@ import Button from "./micro/button";
 import Login from "../modal/auth/login";
 import Signup from "../modal/auth/signup";
 import DropDown from "./dropdown/dropdown";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { state } = useContext(AuthContext);
@@ -38,30 +39,26 @@ const Header = () => {
         switchModal={() => switchModal("MODAL_SIGNIN", "MODAL_LOGIN")}
       />
 
-      <div style={style.header}>
+      <div className="flex justify-between fixed bg-white w-full items-center px-16 py-7">
         <Logo />
+
         {state.isLogin ? (
-          <div style={{ display: "flex", paddingRight: "70px" }}>
+          <div>
             <Icon toogle={toogle} />
             <DropDown isOpen={isLogout} close={() => setLogout(false)} />
           </div>
         ) : (
-          <div style={{ display: "flex", paddingRight: "70px" }}>
+          <div className="flex">
             <Button
               open={() => eventDispatch({ type: "MODAL_LOGIN", payload: true })}
               value="login"
-              style={{
-                ...style.button,
-                ["background"]: "white",
-                ["color"]: "black",
-              }}
             />
             <Button
               open={() =>
                 eventDispatch({ type: "MODAL_SIGNIN", payload: true })
               }
-              value="signup"
-              style={style.button}
+              style="bg-base text-white"
+              value="register"
             />
           </div>
         )}
@@ -71,30 +68,3 @@ const Header = () => {
 };
 
 export default Header;
-
-const style = {
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
-    width: "100%",
-  } as React.CSSProperties,
-
-  pageDark: {
-    backgroundColor: "rgba(0,0,0,0.6)",
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  } as React.CSSProperties,
-
-  button: {
-    background: "#BD0707",
-    color: "white",
-    boxSizing: "border-box",
-    borderRadius: "5px",
-    border: "2px solid #BD0707",
-    padding: "10px",
-    width: "90px",
-  } as React.CSSProperties,
-};

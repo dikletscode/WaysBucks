@@ -1,6 +1,4 @@
-import { ChangeEvent, CSSProperties, FC } from "react";
-
-import "./input.css";
+import { ChangeEvent, FC } from "react";
 
 interface InputInterface {
   name?: string;
@@ -8,19 +6,25 @@ interface InputInterface {
   change?: (e: ChangeEvent<HTMLInputElement>) => void;
   type: string;
   nameField?: string;
-  style?: CSSProperties;
+  bgColor?: string;
+  pattern?: string;
+  notValid?: boolean;
 }
 
 const Input: FC<InputInterface> = (props) => {
   return (
-    <div className="input-wrapper">
+    <div className=" p-1 ">
       <input
         name={props.name}
         value={props.value}
         onChange={props.change}
         type={props.type}
-        className="input-field"
         placeholder={props.nameField}
+        pattern={props.pattern}
+        className={`py-3 px-2 border-2  border-base focus:outline-none focus:ring-2 focus:border-green-600    ${
+          props.notValid ? "bg-red-200 " : "bg-cream"
+        } rounded-md w-full`}
+        required
       />
     </div>
   );
@@ -28,36 +32,20 @@ const Input: FC<InputInterface> = (props) => {
 
 export const Submit = ({
   value,
-  styles,
+  disabled,
 }: {
   value: string;
-  styles?: CSSProperties;
+  disabled?: boolean;
 }) => {
   return (
-    <div className="input-wrapper" style={styles}>
+    <div className="p-1 pt-8 ">
       <input
         value={value}
         type="submit"
-        className="submit"
-        style={style.submit}
+        disabled={disabled}
+        className=" py-3 px-2 w-full border-2 bg-base border-base rounded-md text-white"
       />
     </div>
   );
 };
 export default Input;
-
-const style = {
-  submit: {
-    backgroundColor: "#bd0707",
-    fontSize: "1em",
-    padding: "12px",
-    width: "100%",
-    margin: "0 auto",
-    border: "none",
-    borderRadius: "6px",
-    boxSizing: "border-box",
-    color: "white",
-    fontWeight: 900,
-    lineHeight: "25px",
-  } as CSSProperties,
-};

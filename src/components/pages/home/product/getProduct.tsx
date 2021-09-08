@@ -1,22 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext, { EventContext } from "../../../../context/context";
+import { getProduct, Product } from "../../../../services/product";
+import convert from "../../../function/convertCurrency";
 
 import Login from "../../../modal/auth/login";
-import { ProductTypes } from "../../../types/interface";
 
-const Product = () => {
+const ProductCard = () => {
   const { state } = useContext(AuthContext);
   const { eventState, eventDispatch } = useContext(EventContext);
-  const [listProduct, setProduct] = useState<ProductTypes[]>([]);
+  const [listProduct, setProduct] = useState<Product[]>([]);
   const history = useHistory();
 
-  let productList = localStorage.getItem("_product");
-  useEffect(() => {
-    if (productList) {
-      setProduct(JSON.parse(productList));
+  const fetch = async () => {
+    try {
+      let data = await getProduct();
+      if (data) {
+        setProduct(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [productList, listProduct.length]);
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   const close = () => {
     eventDispatch({ type: "MODAL_LOGIN", payload: false });
@@ -25,7 +34,8 @@ const Product = () => {
     eventDispatch({ type: field, payload: false });
     eventDispatch({ type: to, payload: true });
   };
-  const clickProduct = (id: string, data: object) => {
+  const clickProduct = (id: number, data: object) => {
+    console.log(id);
     if (state.isLogin) {
       history.push({ pathname: "/product/" + id, state: data });
     } else {
@@ -33,68 +43,38 @@ const Product = () => {
     }
   };
 
-  if (!listProduct.length) {
-    return <></>;
-  } else {
-    return (
-      <>
-        {listProduct.map((item) => {
-          return (
-            <>
-              <Login
-                isOpen={eventState.klik}
-                close={close}
-                switchModal={() => switchModal("MODAL_SIGNIN", "MODAL_LOGIN")}
-              />
-              <div
-                style={style.product}
-                key={item.id}
-                onClick={() => clickProduct(item.id, item)}
-              >
-                <div style={{ backgroundColor: "#F7DADA" }}>
-                  <img src={item.image} alt="" style={style.productImage} />
-                  <div style={style.desc}>
-                    <div style={{ padding: "0 0 12px 12px" }}>
-                      <p style={{ color: "#BD0707", fontSize: "1em" }}>
-                        {item.title}
-                      </p>
-                      <p style={{ color: "#BD0707", fontSize: "0.9em" }}>
-                        Rp.{item.price}
-                      </p>
-                    </div>
-                  </div>
+  return (
+    <>
+      {listProduct.map((item) => {
+        return (
+          <div key={item.id}>
+            <Login
+              isOpen={eventState.klik}
+              close={close}
+              switchModal={() => switchModal("MODAL_SIGNIN", "MODAL_LOGIN")}
+            />
+
+            <div
+              className=" bg-pink p-0"
+              key={item.title}
+              onClick={() => clickProduct(item.id, item)}
+            >
+              <img src={item.image} alt="" className="h-72 w-60 object-cover" />
+              <div className="p-3">
+                <div>
+                  <p style={{ color: "#BD0707", fontSize: "1em" }}>
+                    {item.title}
+                  </p>
+                  <p style={{ color: "#BD0707", fontSize: "0.9em" }}>
+                    Rp.{convert(item.price.toString())}
+                  </p>
                 </div>
               </div>
-            </>
-          );
-        })}
-      </>
-    );
-  }
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
 };
-export default Product;
-
-const style = {
-  product: {
-    height: "300px",
-    width: "200px",
-    flexDirection: "column",
-    display: "flex",
-    alignItems: "center",
-    borderRadius: "10px",
-    lineHeight: "4px",
-    padding: "18px 40px 40px 40px",
-    fontFamily: " 'Klee One', cursive",
-  } as React.CSSProperties,
-  productImage: {
-    width: "220px",
-    height: "270px",
-    borderRadius: "10px 10px 0 0",
-    objectFit: "cover",
-  } as React.CSSProperties,
-  desc: {
-    width: "100%",
-    height: "20%",
-    borderRadius: "0 0 10px 10px",
-  } as React.CSSProperties,
-};
+export default ProductCard;

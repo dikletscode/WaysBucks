@@ -1,6 +1,6 @@
 const Reducer = (
   state: any,
-  { type, payload }: { type: string; payload: object | null }
+  { type, payload }: { type: string; payload: string | null }
 ) => {
   switch (type) {
     case "BUYYER_LOGIN_SUCCESS":

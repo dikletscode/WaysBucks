@@ -6,10 +6,12 @@ export type ProtectedRouteProps = {
   path: string;
   exact?: boolean;
   component: ComponentType<any>;
+  restricted?: boolean;
 };
 
 const PrivateRoute = ({
   component: Component,
+  restricted,
   ...rest
 }: ProtectedRouteProps) => {
   // const jsonValue = JSON.parse(localStorage.getItem("_basicInfo") || "{}");
@@ -20,7 +22,13 @@ const PrivateRoute = ({
     <Route
       {...rest}
       render={(props) =>
-        state.isLogin ? <Component {...props} /> : <Redirect to="/" />
+        state.isAdmin && restricted ? (
+          <Component {...props} />
+        ) : state.isLogin && !restricted ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/" />
+        )
       }
     />
   );

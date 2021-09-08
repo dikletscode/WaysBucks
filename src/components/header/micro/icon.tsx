@@ -1,62 +1,48 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext, { CartContext } from "../../../context/context";
-import { image } from "../../assets/assetsRegister";
-import cart from "./cart.png";
+import { icon, image } from "../../assets/assetsRegister";
+import Notification from "../../modal/notification/notif";
 
 const Icon = ({ toogle }: { toogle: () => void }) => {
   const { state } = useContext(AuthContext);
   const { cartState } = useContext(CartContext);
-
+  const [klik, setKlik] = useState(true);
   return (
-    <div style={{ display: "flex" }}>
+    <div className="flex items-center">
       {state.isAdmin ? (
-        <Link to="/dashboard">
-          <img
-            src={image.dasboard}
-            alt=""
-            style={{
-              height: "40px",
-              width: "40px",
-              padding: "10px",
-            }}
-          />
-        </Link>
-      ) : (
-        <div>
-          <Link to="/cart">
-            {cartState == 0 ? (
-              <></>
-            ) : (
-              <div
-                style={{
-                  borderRadius: "50%",
-                  backgroundColor: "#F13F3F",
-                  height: "20px",
-                  width: "20px",
-                  position: "absolute",
-                  right: "145px",
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                {cartState}
-              </div>
-            )}
-            <img src={cart} alt="" style={{ padding: "10px" }} />
+        <div className="pr-5 flex items-center ">
+          <Link to="/dashboard">
+            <img src={image.dasboard} alt="" className="h-9 w-9" />
           </Link>
         </div>
+      ) : (
+        <>
+          <div className="pr-5 flex items-center ">
+            <img src={image.notif} alt="" className="h-9 w-9" />
+            <Notification isOpen={klik} />
+          </div>
+          <div className="pr-5 flex items-center ">
+            <Link to="/cart">
+              {cartState == 0 ? (
+                <></>
+              ) : (
+                <div
+                  style={{ background: "#F13F3F" }}
+                  className="rounded-full h-5 w-5 text-center  absolute  text-white"
+                >
+                  {cartState}
+                </div>
+              )}
+              <img src={icon.cart} alt="" className="object-cover h-8 w-8" />
+            </Link>
+          </div>
+        </>
       )}
       <div>
         <img
-          src={state.avatar != null ? state.avatar : ""}
-          style={{
-            height: "40px",
-            width: "40px",
-            borderRadius: "50%",
-            padding: "10px 15px",
-            objectFit: "cover",
-          }}
+          src={state.avatar != null ? state.avatar : icon.defaultProfile}
+          className="h-10 w-10 rounded-full object-cover"
           onClick={toogle}
         />
       </div>

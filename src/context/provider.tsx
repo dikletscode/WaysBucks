@@ -1,4 +1,4 @@
-import React, { FC, useReducer } from "react";
+import React, { useReducer } from "react";
 import AuthContext, { CartContext } from "./context";
 import reducer from "./reducer/reducer";
 import { EventContext } from "./context";

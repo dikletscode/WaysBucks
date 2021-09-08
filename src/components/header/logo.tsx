@@ -4,7 +4,7 @@ import logo from "./Vector.png";
 
 const Logo = () => {
   return (
-    <div style={{ textAlign: "center", padding: "30px 60px" }}>
+    <div>
       <img
         src={image.logo}
         alt=""

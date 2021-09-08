@@ -8,261 +8,279 @@ import {
   useState,
 } from "react";
 
-import Input from "../../custom/components/input";
-import { gif, icon } from "../../assets/assetsRegister";
+import Input, { Submit } from "../../custom/components/input";
+import { gif, icon, image } from "../../assets/assetsRegister";
 import SuccessPayment from "../../modal/another/success";
-import { v4 as uuidv4 } from "uuid";
-import { useHistory } from "react-router-dom";
 import convert from "../../function/convertCurrency";
-import useLocalStorage from "../../custom/hooks/setLocalStorage";
 import EmptyCart from "../../modal/another/empty";
-import { enumTransaction } from "../../types/roleEnum";
-import { CartContext } from "../../../context/context";
-
-interface Topping {
-  id: string;
-  image: string;
-  price: number;
-  title?: string;
-}
-
-interface CartTypes {
-  id: string;
-  image: string;
-  price: number;
-  title: string;
-  total: number;
-  topping?: Topping[];
-}
-const calculate = (arr: number[], arr2: number[]) => {
-  let a = 0;
-  arr.map((item, index) => {
-    a += item * arr2[index];
-  });
-  return a;
-};
+import {
+  deleteProductCart,
+  getCart,
+  ProductTopping,
+} from "../../../services/cart";
+import { createTransaction, UserOrder } from "../../../services/transaction";
 
 const Cart = () => {
   const [buyyer, setBuyyer] = useState({
-    name: "",
+    fullname: "",
     email: "",
     phone: "",
-    posCode: "",
+    postCode: "",
     address: "",
   });
+  const [attach, setAttach] = useState<null | Blob>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [popup, setPopUp] = useState(false);
-  const history = useHistory();
-  const [cart, setCart] = useState<CartTypes[] | null>(null);
-  const [price, setPrice] = useState<number[]>([]);
-  const [total, setTotal] = useState(0);
-  const [count, setCount] = useState<number[]>([]);
-  const [value, setValue] = useLocalStorage("_transaction", []);
-
-  let jsonCart = localStorage.getItem("_cart");
-
+  const [cart, setCart] = useState<ProductTopping[]>([]);
+  const [disable, setDisable] = useState(true);
+  const [open, setOpen] = useState<boolean[]>(
+    new Array(cart?.length).fill(false)
+  );
   const formSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    letsTransaction();
+  };
+  const getProductCart = async () => {
+    try {
+      let data = await getCart();
+      if (data) {
+        setCart(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    setValue((prev: any) => [
-      ...prev,
-
-      {
-        buyyer,
-        cart,
-        ["paymentCode"]: uuidv4(),
-        ["orderDate"]: new Date(),
-        total,
-        status: enumTransaction.WAIT,
-      },
-    ]);
-
-    setPopUp(true);
+  const deleteProduct = async (id: number) => {
+    try {
+      await deleteProductCart(id);
+      let data = await getCart();
+      if (data) {
+        setCart(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
-    localStorage.setItem("_transaction", JSON.stringify(value));
-  }, [value, total, count, buyyer]);
+    getProductCart();
+  }, []);
 
-  useEffect(() => {
-    if (jsonCart) {
-      const data = JSON.parse(jsonCart);
-      setCart(data);
+  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files != null) {
+      let imgs = e.target.files[0];
+      setAttach(imgs);
+      setDisable(false);
     }
-  }, [jsonCart]);
-
+  };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setBuyyer((prevInput: typeof buyyer) => ({
       ...prevInput,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.type == "number" ? e.target.valueAsNumber : e.target.value,
     }));
   };
 
-  useEffect(() => {
-    if (cart != null) {
-      setCount([...new Array(cart.length).fill(1)]);
-      cart.map((item, index) => {
-        setPrice((prev) => [...prev, item.total]);
-      });
-    }
+  const totalPrice = useMemo(() => {
+    let arr: number[] = [];
+    cart?.map((item) => {
+      arr.push(item.price);
+    });
+    return arr.reduce((a, b) => a + b, 0);
   }, [cart]);
+  let form = new FormData();
 
-  useEffect(() => {
-    if (price.length != 0 && count.length != 0) {
-      setTotal(calculate(count, price));
-    }
-  }, [price, count]);
+  const letsTransaction = async () => {
+    try {
+      let a: keyof UserOrder;
+      setPopUp(true);
+      setIsLoading(true);
+      if (attach) {
+        for (a in buyyer) {
+          form.set(a, buyyer[a]);
+        }
+        form.set("totalPrice", totalPrice.toString());
+        form.set("image", attach);
+      }
+      await createTransaction(form);
 
-  const remove = (index: number) => {
-    if (cart != null) {
-      const copy = [...cart];
-      copy.splice(index, 1);
-      setCart(copy);
-      localStorage.setItem("_cart", JSON.stringify(copy));
+      setIsLoading(false);
+    } catch (error) {
+      setPopUp(false);
+      console.log(error);
     }
   };
-  if (cart == null) {
-    return <img src={gif.loading} alt="" />;
-  }
+
+  console.log(cart);
+
+  useEffect(() => {
+    setOpen([...new Array(cart?.length).fill(false)]);
+  }, [cart?.length]);
+
+  const klik = (index: number) => {
+    if (open) {
+      if (open[index]) {
+        setOpen((prev) => [...prev, (prev[index] = false)]);
+      } else {
+        setOpen([...new Array(cart?.length).fill(false)]);
+        setOpen((prev) => [...prev, (prev[index] = true)]);
+      }
+    }
+  };
 
   return (
     <>
-      <SuccessPayment paymentCode={value["paymentCode"]} open={popup} />;
-      {cart ? (
-        <div style={style.container}>
-          <div style={style.myCart}>
-            <div>
-              <h1>My Cart</h1>
+      <SuccessPayment open={popup} isLoading={isLoading} />
 
-              <hr />
-            </div>
-            <div style={style.myProduct}>
-              {cart.map((item: CartTypes, index) => {
-                return (
-                  <>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "0 10px",
-                      }}
-                    >
-                      <div style={{ display: "flex", padding: "20px" }}>
-                        <img src={item.image} alt="" style={style.imgProduct} />
-                        <div style={{ paddingLeft: "20px" }}>
-                          <h3>{item.title}</h3>
-                          <p style={{ fontSize: "0.9em" }}>
-                            {" "}
-                            Topping:{" "}
-                            {item.topping ? (
-                              item.topping.map((item) => {
-                                return <small>{item.title}</small>;
-                              })
-                            ) : (
-                              <p> tidak ada</p>
-                            )}
-                          </p>
+      {cart ? (
+        <div className="container  px-20 mx-auto pt-32">
+          <div className="pl-16">
+            <h1 className="text-2xl pb-4 ">My Cart</h1>
+            <p>Review Your Order</p>
+          </div>
+          {console.log("render")}
+          <div className="flex justify-evenly  ">
+            <div className="w-1/2 text-base flex flex-col ">
+              <hr className="border-base w-full" />
+              {cart.length ? (
+                <div className="h-96 overflow-y-auto px-10 scrol">
+                  {cart.map((item: ProductTopping, index: number) => {
+                    return (
+                      <div>
+                        <div className="flex justify-between items-center">
+                          <div className="flex pt-6 items-center">
+                            <img
+                              src={item.products.image}
+                              alt=""
+                              className="h-24 w-24 object-cover"
+                            />
+                            <div style={{ paddingLeft: "20px" }}>
+                              <h3>{item.products.title}</h3>
+                              <p className="font-light">
+                                Topping:
+                                {item.toppings ? (
+                                  item.toppings.map((item: any) => {
+                                    return <span>{" " + item.title}</span>;
+                                  })
+                                ) : (
+                                  <p> tidak ada</p>
+                                )}
+                                <p>qty : {item.qty}</p>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex pt-6 flex-col items-center">
+                            <p>Rp.{convert(item.price.toString())}</p>
+                            <div style={{ alignSelf: "flex-end" }}>
+                              <img
+                                src={icon.remove}
+                                alt=""
+                                style={style.iconR}
+                                onClick={() => klik(index)}
+                              />
+                            </div>
+                          </div>
+                          {open[index] ? (
+                            <div className="   ">
+                              <p className="p-2">delete?</p>
+                              <div className="flex justify-around ">
+                                <img
+                                  src={image.check}
+                                  alt=""
+                                  onClick={() => deleteProduct(item.id)}
+                                />
+                                <img src={image.cancel} alt="" />
+                              </div>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <p>Rp.{convert(item.total.toString())}</p>
-                        <div style={{ alignSelf: "flex-end" }}>
-                          <img
-                            src={icon.remove}
-                            alt=""
-                            style={style.iconR}
-                            onClick={() => remove(index)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
-            </div>
-            <div style={style.priceQty}>
-              <div style={{ width: "60%" }}>
-                {Hr}
-                <p>
-                  Sub Total :{" "}
-                  {price.length
-                    ? convert(price[price.length - 1].toString())
-                    : convert(total.toString())}
-                </p>
-                <p>Qty : {cart.length}</p>
-                {Hr}
-                <p> Total : {convert(total.toString())}</p>
-              </div>
-              <div style={{ width: "40%" }}>
-                <div
-                  style={{
-                    backgroundColor: "#E0C8C840",
-                    textAlign: "center",
-                  }}
-                >
-                  <img src={icon.attach} />
+                    );
+                  })}
+                </div>
+              ) : (
+                <img src={gif.loading} alt="" />
+              )}
+              <hr className="border-base w-full pb-10" />
+              <div className="flex justify-between items-center">
+                <div className="w-7/12 ">
+                  {Hr}
+                  <div className="py-4">
+                    <p>Sub Total : {convert(totalPrice.toString())}</p>
+                    <p>Qty : {cart.length}</p>
+                  </div>
+                  {Hr}
+                  <p> Total : {convert(totalPrice.toString())}</p>
                 </div>
               </div>
             </div>
-          </div>
-          <div style={style.form}>
-            <form action="" onSubmit={formSubmit}>
-              <Input
-                name="name"
-                type="text"
-                value={buyyer.name}
-                nameField="Name"
-                change={handleChange}
-              />
-              <Input
-                name="email"
-                type="text"
-                value={buyyer.email}
-                nameField="Email"
-                change={handleChange}
-              />
-              <Input
-                name="phone"
-                type="text"
-                value={buyyer.phone}
-                nameField="phone"
-                change={handleChange}
-              />
-              <Input
-                name="posCode"
-                type="number"
-                value={buyyer.posCode}
-                nameField="Pos Code"
-                change={handleChange}
-              />
-              <div className="input-wrapper">
-                <textarea
-                  name="address"
-                  className="input-field"
-                  id=""
-                  cols={40}
-                  rows={5}
-                  value={buyyer.address}
-                  placeholder="address"
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                    setBuyyer((prev) => ({
-                      ...prev,
-                      [e.target.name]: e.target.value,
-                    }));
-                  }}
-                ></textarea>
-              </div>
-              <Input
-                name="submit-order"
-                type="submit"
-                value="submit"
-                change={handleChange}
-              />
-            </form>
+            <div className="w-5/12">
+              <form action="" onSubmit={formSubmit}>
+                <div className="flex flex-row-reverse ">
+                  <div className="w-full">
+                    <Input
+                      name="fullname"
+                      type="text"
+                      value={buyyer.fullname}
+                      nameField="Name"
+                      change={handleChange}
+                    />
+                    <Input
+                      name="email"
+                      type="text"
+                      value={buyyer.email}
+                      nameField="Email"
+                      change={handleChange}
+                    />
+                    <Input
+                      name="phone"
+                      type="text"
+                      value={buyyer.phone}
+                      nameField="phone"
+                      change={handleChange}
+                    />
+                    <Input
+                      name="postCode"
+                      type="number"
+                      value={buyyer.postCode}
+                      nameField="Post Code"
+                      change={handleChange}
+                    />
+                    <div className="p-1 ">
+                      <textarea
+                        name="address"
+                        className="py-3 px-2 bg-cream border-2  w-full h-28 border-base focus:outline-none focus:ring-2"
+                        id=""
+                        value={buyyer.address}
+                        placeholder="address"
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                          setBuyyer((prev) => ({
+                            ...prev,
+                            address: e.target.value,
+                          }));
+                        }}
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div className="bg-cream absolute  w-48 left-2/5 bottom-1/6  border-2 border-base">
+                    <div className=" w-full h-28 flex items-center justify-center">
+                      <label htmlFor="">
+                        <input
+                          type="file"
+                          onChange={handleImage}
+                          className="opacity-0 absolute z-0"
+                        />
+                        <img src={icon.attach} />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <Submit value="submit" />
+              </form>
+            </div>
           </div>
         </div>
       ) : (
@@ -286,16 +304,8 @@ const style = {
     borderRadius: "8px",
   } as CSSProperties,
 
-  myCart: {
-    width: "53%",
-    padding: "0 95px",
-    overflowX: "auto",
-    color: "#BD0707",
-  } as CSSProperties,
-
   form: {
     width: "30%",
-    padding: "68px 40px 0 0",
   } as CSSProperties,
   priceQty: {
     display: "flex",
@@ -313,12 +323,6 @@ const style = {
     position: "fixed",
     width: "100%",
     height: "100%",
-  } as CSSProperties,
-  myProduct: {
-    overflowY: "scroll",
-    height: "440px",
-    width: "100%",
-    color: "#BD0707",
   } as CSSProperties,
 };
 export default Cart;

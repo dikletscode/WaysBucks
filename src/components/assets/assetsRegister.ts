@@ -20,6 +20,11 @@ import dashboard from "./images/dasboard.png";
 import empty from "./images/empty.gif";
 import check from "./images/check.png";
 import cancel from "./images/cancel.png";
+import cart from "./images/cart.png";
+import defaultProfile from "./images/defaultProfile.png";
+import attachment from "./images/attach2.png";
+import topping2 from "./images/topping2.png";
+import notif from "./images/notif.jpg";
 
 export const icon = {
   addProduct: addProduct,
@@ -30,6 +35,8 @@ export const icon = {
   profile: profile,
   close: close,
   starbak: starbak,
+  cart: cart,
+  defaultProfile: defaultProfile,
 };
 
 export const gif = {
@@ -50,4 +57,7 @@ export const image = {
   dasboard: dashboard,
   check: check,
   cancel: cancel,
+  attach: attachment,
+  topping: topping2,
+  notif: notif,
 };

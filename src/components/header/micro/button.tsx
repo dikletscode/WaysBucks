@@ -1,24 +1,23 @@
 import React from "react";
 
-const buttonStyle = {
-  padding: "20px",
-} as React.CSSProperties;
-
 const Button = ({
   open,
   value,
-  style,
+  style = "bg-white text-base  ",
 }: {
   open: () => void;
-
+  style?: string;
   value: string;
-  style: {};
 }) => {
   return (
-    <div style={buttonStyle}>
-      <button onClick={open} style={style}>
-        {value}
-      </button>
+    <div className="  w-32 h-14  flex items-center justify-center">
+      <div
+        className={`w-28 ${style} border-2 border-base text-white h-9 flex items-center justify-center`}
+      >
+        <button onClick={open} className="p-5  ">
+          {value}
+        </button>
+      </div>
     </div>
   );
 };

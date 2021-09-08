@@ -1,303 +1,259 @@
 import React, {
   ChangeEvent,
   CSSProperties,
-  FormEvent,
+  useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
-import { gif, icon, image } from "../../assets/assetsRegister";
-import { Submit } from "../../custom/components/input";
+import {
+  getTransaction,
+  HistoryTransaction,
+} from "../../../services/transaction";
+import { gif, image } from "../../assets/assetsRegister";
+import { useLocation } from "react-router-dom";
+
 import convert from "../../function/convertCurrency";
-import { ProfileTypes, Transaction } from "../../types/interface";
+
+import StatusTransac from "./statusColor";
+import { editProfile, profile, ProfileType } from "../../../services/auth";
+import Input from "../../custom/components/input";
+import AuthContext from "../../../context/context";
 
 const UserProfile = () => {
-  let user = localStorage.getItem("_basicInfo");
-  let transac = localStorage.getItem("_transaction");
-  const [transaction, setTransaction] = useState<Transaction[]>([]);
-  let reader = new FileReader();
+  const [transaction, setTransaction] = useState<HistoryTransaction[] | null>(
+    null
+  );
+  const { state, dispatch } = useContext(AuthContext);
+  const [update, setUpdate] = useState(false);
+  const [user, setUser] = useState<ProfileType | null>(null);
   const [isEditing, setEditing] = useState({
     fullname: false,
-    avatar: false,
   });
-  const [data, setData] = useState<ProfileTypes | null>(null);
-  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files != null && data != null) {
-      const copy: ProfileTypes = { ...data };
 
-      let imgs = e.target.files[0];
-      reader.readAsDataURL(imgs);
-      reader.onload = function () {
-        if (reader.result) {
-          copy["detail"].avatar = reader.result as string;
-          setData(copy);
-        }
-      };
-      reader.onerror = function (error) {
-        console.log("Error: ", error);
-      };
-    }
-  };
-  useEffect(() => {
-    if (user) {
-      setData(JSON.parse(user));
-    }
-    if (transac) {
-      setTransaction(JSON.parse(transac));
-    }
-  }, [user, transac]);
-
-  if (user == null || data == null) {
-    return <img src={gif.loading} alt="" />;
-  }
   const toogle = (field: string) => {
     setEditing((prev) => ({ ...prev, [field]: true }));
   };
-  const changeFullname = (e: ChangeEvent<HTMLInputElement>) => {
-    if (data != null) {
-      const copy: ProfileTypes = { ...data };
-      copy["detail"].fullname = e.target.value;
-      setData(copy);
+  const fetchTransaction = async () => {
+    try {
+      let data = await getTransaction();
+      setTransaction(data);
+    } catch (error) {
+      console.log(error);
     }
   };
-
-  const submit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    localStorage.setItem("_basicInfo", JSON.stringify(data || "{}"));
-    setEditing((prev) => ({ ...prev, ["fullname" || "Avatar"]: false }));
+  const getProfile = async () => {
+    try {
+      let data = await profile();
+      if (data) {
+        setUser(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-  if (transaction.length == 0) {
-    return <img src={gif.loading} alt="" />;
-  }
-  console.log(transaction);
+  useEffect(() => {
+    getProfile();
+    if (update) {
+      getProfile();
+      dispatch({ type: "BUYYER_LOGIN_SUCCESS", payload: user?.profile.image });
+    }
+  }, [update]);
+
+  useEffect(() => {
+    fetchTransaction();
+  }, []);
+
+  const formData = new FormData();
+  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const img = e.target.files[0];
+      formData.set("image", img);
+    }
+    const upload = async () => {
+      try {
+        await editProfile(formData);
+        setUpdate(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    upload();
+  };
+
+  let date = (db: Date) => {
+    let dt = new Date(db);
+
+    return (
+      dt.toLocaleDateString() + " " + dt.getHours() + "." + dt.getSeconds()
+    );
+  };
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+  const ref = useRef<any>();
+
+  useEffect(() => {
+    ref.current.scrollIntoView();
+  }, []);
+
+  console.log(transaction, "ts");
   return (
-    <div style={style.container}>
-      <div style={style.myProfile}>
-        <h2>My Profile</h2>
-        <div style={{ display: "flex" }}>
-          {isEditing.avatar ? (
-            <label style={style.upload}>
-              <img src={data.detail.avatar} alt="" style={style.avatar} />
-              <form action="" onSubmit={submit}>
-                <input
-                  type="file"
-                  id="fullname"
-                  onChange={handleImage}
-                  style={{
-                    height: "200px",
-                    width: "200px",
-                    position: "absolute",
-                    display: "none",
-                  }}
-                />
-                <input type="submit" />
-              </form>
-            </label>
-          ) : (
-            <>
+    <div className="container flex pt-40  mx-auto justify-between py-20 ">
+      {user ? (
+        <div className="w-1/2">
+          <h2>My Profile</h2>
+          <div className="flex">
+            <label className="border-2  inline-block px-3 py-6 cursor-pointer ">
               <img
-                src={data.detail.avatar}
                 alt=""
-                style={style.avatar}
-                onClick={() => toogle("avatar")}
+                src={user?.profile.image ? user?.profile.image : image.product}
+                className="object-cover h-48 w-48"
               />
-            </>
-          )}
-          <div style={{ padding: "0 40px" }}>
-            <div style={{ padding: "20px 0" }}>
-              <h4>Full Name</h4>
-              {isEditing.fullname ? (
-                <form action="" onSubmit={submit}>
-                  <input
-                    type="text"
-                    id="fullname"
-                    value={data.detail.fullname}
-                    onChange={changeFullname}
-                  />
-                  <Submit value="submit" styles={{ width: "80px" }} />
-                </form>
-              ) : (
-                <>
-                  <p>{data.detail.fullname}</p>
-                  <button onClick={() => toogle("fullname")} style={style.edit}>
-                    edit
-                  </button>
-                </>
-              )}
-            </div>
-            <div>
-              <h4>Email</h4>
-              <p>{data.email}</p>
+
+              <input
+                type="file"
+                id="fullname"
+                className="h-10 w-10 absolute opacity-0"
+                onChange={handleImage}
+              />
+            </label>
+
+            <div style={{ padding: "0 40px" }}>
+              <div style={{ padding: "20px 0" }}>
+                <h4>Full Name</h4>
+                {isEditing.fullname ? (
+                  <form action="">
+                    <div
+                      className={`border-2 flex ${
+                        isEditing.fullname ? "border-red-500" : ""
+                      }`}
+                    >
+                      <input
+                        type="text"
+                        id="fullname"
+                        value={user.profile?.fullname}
+                      />
+                      <input type="submit" />
+                    </div>
+                  </form>
+                ) : (
+                  <div className="flex justify-between">
+                    <p>{user.profile?.fullname}</p>
+                    <button onClick={() => toogle("fullname")}>edit</button>
+                  </div>
+                )}
+              </div>
+              <div>
+                <h4>Email</h4>
+                <h4>{user.email}</h4>
+              </div>
+              <div>
+                <h2>Password</h2>
+                <h2>*********</h2>
+                <h2>Change Password?</h2>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div style={style.transaction}>
-        <h2>My Transaction</h2>
-        {transaction.map((item) => {
-          return (
-            <div
-              key={item.paymentCode}
-              style={{
-                backgroundColor: "white",
-                display: "flex",
-                padding: "15px 0px",
-                justifyContent: "space-around",
-                alignItems: "center",
-                alignContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: "#F7DADA",
-                  display: "flex",
-                  padding: "0 0 10px 30px",
-                  width: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    width: "60%",
-                    display: "flex",
-                    alignItems: "center",
-                    alignContent: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  {item.cart.map((item2) => {
-                    return (
-                      <div
-                        style={{
-                          display: "flex",
-                          padding: "20px",
-                          width: "100%",
-                          alignContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <img
-                            src={item2.image}
-                            alt=""
-                            style={{
-                              height: "120px",
-                              width: "100px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            padding: "0 10px",
-                            color: "#BD0707",
-                            fontFamily: "'Josefin Sans', sans-serif",
-                          }}
-                        >
-                          <h3>Ice Cofee palm sugar</h3>
-                          <p>{new Date(item.orderDate).toDateString()}</p>
-                          <p>
-                            Topping:
-                            {item2.topping.map((item3) => {
-                              return " " + item3.title + ",";
-                            })}
-                          </p>
+      ) : (
+        <div>s</div>
+      )}
 
-                          <p>Price: {convert(item2.price.toString())}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "space-evenly",
-                    }}
-                  >
-                    <img
-                      src={image.logo}
-                      alt=""
-                      style={{ padding: "50px", height: "70px", width: "70px" }}
-                    />
-                    <img
-                      src={image.barcode}
-                      alt=""
+      <div className=" block ">
+        <h2></h2>
+
+        <div
+          ref={ref}
+          className=" flex min-h-0 max-h-97  flex-col-reverse overflow-y-auto  "
+        >
+          {transaction ? (
+            transaction.map((item, index) => {
+              return (
+                <div key={index} className=" p-7  r ">
+                  <div className="bg-red-200 w-full flex items-center justify-between">
+                    <div
                       style={{
-                        padding: "0 0 10px 0",
-                        height: "120px",
-                        width: "120px",
+                        width: "60%",
+                        display: "flex",
+                        alignItems: "center",
+                        alignContent: "center",
+                        flexDirection: "column",
                       }}
-                    />
-                    <img src={image.otw} alt="" />
-                    <p>SubTotal : {item.total}</p>
+                    >
+                      {item.history.map((item2) => {
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              padding: "20px",
+                              width: "100%",
+                              alignContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <div>
+                              <img
+                                src={item2.product?.image}
+                                alt=""
+                                style={{
+                                  height: "120px",
+                                  width: "100px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </div>
+                            <div
+                              style={{
+                                padding: "0 10px",
+                                color: "#BD0707",
+                                fontFamily: "'Josefin Sans', sans-serif",
+                              }}
+                            >
+                              <h3>{item2.product?.title || ""}</h3>
+                              <p>{date(item2.createdAt)}</p>
+                              <p>
+                                Topping:
+                                {item2.toppings?.map((item3) => {
+                                  return " " + item3.title + ",";
+                                })}
+                              </p>
+
+                              {/* <p>Price: {convert(item2.price.toString())}</p> */}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center p-10">
+                      <div className="flex flex-col items-center">
+                        <img
+                          src={image.logo}
+                          alt=""
+                          className="h-14 w-14 object-cover "
+                        />
+                        <img src={image.barcode} alt="" className="p-6" />
+                        <StatusTransac status={item.status} />
+                        <p className="text-xs">
+                          {" "}
+                          SubTotal : Rp.{convert(item.totalPrice.toString())}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })
+          ) : (
+            <img src={gif.loading} alt="" />
+          )}
+        </div>
       </div>
     </div>
   );
 };
 export default UserProfile;
-
-const style = {
-  container: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "0 100px",
-  } as CSSProperties,
-  myProfile: {
-    width: "50%",
-  } as CSSProperties,
-  transaction: {
-    width: "60%",
-    padding: "0 20px",
-    justifyContent: "flex-start",
-    display: "flex",
-    flexDirection: "column",
-  } as CSSProperties,
-  avatar: {
-    width: "270px",
-    height: "320px",
-    objectFit: "cover",
-  } as CSSProperties,
-
-  imgProduct: {
-    height: "120px",
-    width: "100px",
-    objectFit: "cover",
-  } as CSSProperties,
-  iconR: {
-    objectFit: "contain",
-    height: "20px",
-    paddingRight: 0,
-  } as CSSProperties,
-
-  imgBox: {
-    padding: "50px",
-  } as CSSProperties,
-  upload: {
-    border: "1px solid #ccc",
-    display: "inline-block",
-    padding: "6px 12px",
-    cursor: "pointer",
-  } as React.CSSProperties,
-  avatarFile: {
-    height: "100px",
-    width: "100px",
-    borderRadius: "50%",
-    objectFit: "cover",
-  } as React.CSSProperties,
-
-  edit: {
-    padding: "5px 15px",
-    color: "white",
-    borderRadius: "5px",
-    border: "none",
-    backgroundColor: "#0ACF83",
-  } as React.CSSProperties,
-};

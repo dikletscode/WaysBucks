@@ -10,37 +10,33 @@ import AddProduct from "./components/pages/home/product/addProduct";
 import UserProfile from "./components/pages/profile/user";
 import AddTopping from "./components/pages/topping/addTopping";
 import { role } from "./components/types/roleEnum";
-import AuthContext, { CartContext } from "./context/context";
+import AuthContext from "./context/context";
 import PrivateRoute from "./router/private";
 import Dashboard from "./components/pages/dashboard/admin";
+import { setAuthToken } from "./config/axios";
+import Footer from "./components/header/footer";
+import MenuAdmin from "./components/pages/dashboard/Menu";
 
 function App() {
   const { state, dispatch } = useContext(AuthContext);
-  const { increment } = useContext(CartContext);
 
-  const loginUser = localStorage.getItem("_basicInfo");
-  const cart = localStorage.getItem("_cart");
+  const loginUser = localStorage.getItem("_user");
+
   useEffect(() => {
-    const user = JSON.parse(loginUser || "{}");
+    const data = JSON.parse(loginUser || "{}");
     if (loginUser) {
-      if (role.SELLER == user.role) {
-        dispatch({ type: "ADMIN_LOGIN_SUCCESS", payload: user.detail.avatar });
-      } else if (role.BUYYER == user.role) {
-        dispatch({ type: "BUYYER_LOGIN_SUCCESS", payload: user.detail.avatar });
+      setAuthToken(data.token);
+      if (role.SELLER === data.user.role) {
+        dispatch({ type: "ADMIN_LOGIN_SUCCESS", payload: null });
+      } else if (role.BUYYER === data.user.role) {
+        dispatch({ type: "BUYYER_LOGIN_SUCCESS", payload: null });
       }
     } else {
       dispatch({ type: "LOGIN_FAILED", payload: null });
     }
-  }, [loginUser]);
+  }, [loginUser, dispatch]);
 
-  useEffect(() => {
-    if (cart) {
-      const cartLength = JSON.parse(cart);
-      increment(cartLength.length);
-    }
-  }, [cart]);
-
-  if (state == null) {
+  if (state === null) {
     return <img src={gif.loading} alt="" />;
   }
 
@@ -51,11 +47,28 @@ function App() {
         <Route component={HomePage} path="/" exact />
         <PrivateRoute component={Cart} path="/cart" exact />
         <PrivateRoute component={Detail} path="/product/:id" exact />
-        <PrivateRoute component={AddTopping} path="/add/topping" exact />
-        <PrivateRoute component={AddProduct} path="/add/product" exact />
-        <PrivateRoute component={UserProfile} path="/profile" exact />
-        <PrivateRoute component={Dashboard} path="/dashboard" exact />
+        <PrivateRoute
+          component={AddTopping}
+          path="/add/topping"
+          exact
+          restricted
+        />
+        <PrivateRoute
+          component={AddProduct}
+          path="/add/product"
+          exact
+          restricted
+        />
+        <PrivateRoute component={UserProfile} path="/profile" />
+        <PrivateRoute component={MenuAdmin} path="/menu" exact />
+        <PrivateRoute
+          component={Dashboard}
+          path="/dashboard"
+          exact
+          restricted
+        />
       </Switch>
+      <Footer />
     </Router>
   );
 }

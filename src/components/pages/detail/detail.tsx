@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { useCallback } from "react";
 import {
   CSSProperties,
   FormEvent,
@@ -5,14 +7,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { CartContext } from "../../../context/context";
+import { addToCart, getCart, updateCart } from "../../../services/cart";
+import { getTopping, ToppingTypes } from "../../../services/topping";
 import { Submit } from "../../custom/components/input";
-import useLocalStorage from "../../custom/hooks/setLocalStorage";
 
 import convert from "../../function/convertCurrency";
-import getTopping from "../../function/getTopping";
-import { ProductTypes } from "../../types/interface";
+import getToppingId from "../../function/getTopping";
 
 const calculate = (arr: number[], arr2: number[]) => {
   let a = 0;
@@ -21,59 +23,84 @@ const calculate = (arr: number[], arr2: number[]) => {
   });
   return a;
 };
+const equalsIgnoreOrder = (a: number[], b: number[]) => {
+  if (a.length !== b.length) return false;
+  const uniqueValues = new Set([...a, ...b]);
+  for (const v of uniqueValues) {
+    const aCount = a.filter((e) => e === v).length;
+    const bCount = b.filter((e) => e === v).length;
+    if (aCount !== bCount) return false;
+  }
+  return true;
+};
 
 const Detail = () => {
   const item: any = useLocation().state;
-  let getJson = localStorage.getItem("_topping");
-  const [value, setValue] = useState<ProductTypes[]>([]);
+  const [toppings, setToppings] = useState<ToppingTypes[]>([]);
   const [price, setPrice] = useState<number[]>([]);
   const [klik, setKlik] = useState<boolean[]>([]);
   const [count, setCount] = useState<number[]>([]);
-  const [cart, sendToCart] = useLocalStorage("_cart", []);
-  const [topping, sendTopping] = useState<any[]>([]);
-  const [total, setTotal] = useState(0);
+  const [amount, setAmount] = useState(1);
+  const [isExist, setExist] = useState<boolean>(false);
   const { increment } = useContext(CartContext);
+  const { id } = useParams<{ id: string }>();
+  const [idExist, setIdExist] = useState<number | null>(null);
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const fetch = async () => {
+    try {
+      let data = await getTopping();
+      if (data) {
+        setToppings(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    sendToCart((prev: any) => [
-      ...prev,
-      { ...item, ["topping"]: topping, total },
-    ]);
+  const toppingSelected = useMemo(() => {
+    return getToppingId(klik, toppings);
+  }, [klik, toppings]);
+
+  const getProductCart = async () => {
+    try {
+      let data = await getCart();
+
+      if (data) {
+        data.map((topping) => {
+          if (topping.products.id == parseInt(id)) {
+            let idStr = topping.toppings.map((toppingId) => toppingId.id);
+            if (equalsIgnoreOrder(idStr, toppingSelected)) {
+              setIdExist(topping.id);
+            } else {
+              setIdExist(null);
+            }
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    if (getJson) {
-      let topping = JSON.parse(getJson);
-      if (topping) {
-        setValue(topping);
-      }
-    }
-  }, [getJson, value.length]);
+    fetch();
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("_cart", JSON.stringify(cart));
-  }, [cart, topping, item]);
+    getProductCart();
+  }, [toppingSelected]);
 
   useEffect(() => {
-    setKlik([...new Array(value.length).fill(false)]);
-    setCount([...new Array(value.length).fill(0)]);
-    value.forEach((item) => {
+    setKlik([...new Array(toppings.length).fill(false)]);
+    setCount([...new Array(toppings.length).fill(0)]);
+    toppings.forEach((item) => {
       setPrice((prev) => [...prev, item.price]);
     });
-  }, [value.length]);
+  }, [toppings.length]);
 
-  useEffect(() => {
-    if (price.length != 0 && count.length != 0) {
-      setTotal(calculate(count, price) + item.price);
-    }
-  }, [price, count]);
-
-  useEffect(() => {
-    sendTopping(getTopping(klik, value));
-    increment(cart.length);
-  }, [klik, value, cart]);
+  const totalCalculate = useMemo(() => {
+    return calculate(count, price) + item.price * amount;
+  }, [price, count, amount]);
 
   const select = (index: number) => {
     const arr = [...klik];
@@ -82,69 +109,111 @@ const Detail = () => {
       arr[index] = false;
       counts[index] = 0;
     } else {
-      counts[index] = 1;
+      counts[index] = amount;
       arr[index] = true;
     }
-
     setCount(counts);
     setKlik(arr);
   };
 
+  const counter = {
+    increment: () => setAmount((prev) => prev + 1),
+    decrement: () => setAmount((prev) => (prev > 1 ? prev - 1 : prev)),
+  };
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const toCart = async () => {
+      try {
+        console.log(idExist);
+        if (idExist) {
+          await updateCart(idExist, {
+            qty: amount,
+            price: totalCalculate,
+          });
+        } else {
+          await addToCart({
+            id: parseInt(id),
+            qty: amount,
+            toppings: toppingSelected,
+            price: totalCalculate,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    toCart();
+  };
+
   return (
-    <div style={style.container}>
+    <div className="flex justify-between pt-40 px-28">
       <div style={style.left}>
         <img src={item.image} alt="" style={style.image} />
       </div>
+      {console.log("render 1")}
       <div style={style.right}>
-        <h1>{item.title}</h1>
-        <small>{item.price}</small>
-        <p>Toping</p>
-        <div style={style.containerTopping}>
-          {value.length ? (
-            value.map((item, index) => {
-              return (
-                <>
-                  <div
-                    style={{ padding: "0 20px" }}
-                    key={item.id}
-                    onClick={() => select(value.indexOf(item))}
-                  >
-                    <img
-                      src={item.image}
-                      alt=""
-                      style={
-                        klik[index]
-                          ? {
-                              ...style.imageTopping,
-                              ["border"]: "1px solid red",
-                            }
-                          : style.imageTopping
-                      }
-                    />
-                    <p style={{ textAlign: "center" }}>
-                      {item.title} <br />
-                      <small style={{ color: "red" }}>
-                        +Rp.{convert(item.price.toString())}
-                      </small>
-                    </p>
-                  </div>
-                </>
-              );
-            })
-          ) : (
-            <></>
-          )}
+        <h1 className="text-base font-semibold text-3xl">{item.title}</h1>
+        <small className="text-base text-sm">
+          Rp. {convert(item.price.toString())}
+        </small>
+        <div className="pt-2">
+          <p>Toping</p>
+          <div style={style.containerTopping}>
+            {toppings.length ? (
+              toppings.map((item, index) => {
+                return (
+                  <>
+                    <div
+                      style={{ padding: "0 20px" }}
+                      key={item.id}
+                      onClick={() => select(index)}
+                    >
+                      <img
+                        src={item.image}
+                        alt=""
+                        style={
+                          klik[index]
+                            ? {
+                                ...style.imageTopping,
+                                ["border"]: "1px solid red",
+                              }
+                            : style.imageTopping
+                        }
+                      />
+                      <p style={{ textAlign: "center" }}>
+                        {item.title} <br />
+                        <small style={{ color: "red" }}>
+                          +Rp.{convert(item.price.toString())}
+                        </small>
+                      </p>
+                    </div>
+                  </>
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        <p>amount</p>
+        <div className="flex w-24 justify-between ">
+          <p onClick={counter.decrement} className="cursor-pointer">
+            -
+          </p>
+          <p>{amount}</p>
+          <p onClick={counter.increment} className="cursor-pointer">
+            +
+          </p>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p> Total Pembayaran: </p>
-          <p> Rp.{convert(total.toString())} </p>
+          <p> Rp.{convert(totalCalculate.toString())} </p>
         </div>
         <div>
-          <form action="" onSubmit={submit}>
-            <Submit
-              value="Add Cart"
-              styles={{ width: "100%", paddingTop: "40px" }}
-            />
+          <form action="" onSubmit={onSubmit}>
+            <Submit value="Add To Cart" />
           </form>
         </div>
       </div>
@@ -169,7 +238,6 @@ const style = {
     width: "400px",
     height: "500px",
     objectFit: "cover",
-    padding: "40px 40px 0 40px",
   } as CSSProperties,
   toping: {
     display: "flex",
@@ -191,8 +259,8 @@ const style = {
     width: "700px",
   } as CSSProperties,
   imageTopping: {
-    height: "120px",
+    height: "100px",
     objectFit: "cover",
-    width: "120px",
+    width: "100px",
   } as CSSProperties,
 };

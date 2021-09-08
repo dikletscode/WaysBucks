@@ -7,5 +7,5 @@ export enum enumTransaction {
   WAIT = "Waiting Approve",
   SUCCESS = "Success",
   CANCEL = "Cancel",
-  ON_THE_WAY = "On The Way",
+  OTW = "On The Way",
 }

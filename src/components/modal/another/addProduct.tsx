@@ -3,17 +3,18 @@ import { useHistory } from "react-router-dom";
 
 import { gif } from "../../assets/assetsRegister";
 
-const SuccessPayment = ({
+const SuccessCreate = ({
   open,
   isLoading,
+  close,
 }: {
   open: boolean;
   isLoading: boolean;
+  close: () => void;
 }) => {
-  let history = useHistory();
-  if (open && isLoading == false) {
-    setTimeout(() => history.push("/profile"), 4000);
-  }
+  setTimeout(() => {
+    close();
+  }, 4000);
   return (
     <>
       {open ? (
@@ -23,9 +24,8 @@ const SuccessPayment = ({
               <img src={gif.loading} alt="" />
             ) : (
               <>
-                <h1>THANK YOU</h1>
                 <img src={gif.success} alt="" />
-                <h1>Your Payment was successful</h1>
+                <h1>Product added successfully</h1>
               </>
             )}
           </>
@@ -36,7 +36,7 @@ const SuccessPayment = ({
     </>
   );
 };
-export default SuccessPayment;
+export default SuccessCreate;
 
 const style = {
   container: {

@@ -1,20 +1,20 @@
 import { useContext } from "react";
-import { style } from "../auth/form.style";
 
 import { EventContext } from "../../../context/context";
+import { gif } from "../../assets/assetsRegister";
+import AuthWrapper from "../wrapper";
 
-const Congrats = ({ animation }: { animation: string }) => {
+const Congrats = () => {
   const { eventDispatch } = useContext(EventContext);
 
   setTimeout(
     () => eventDispatch({ type: "MODAL_LOGIN", payload: false }),
-    3400
+    2400
   );
   return (
-    <div style={style.container}>
-      <img src={animation} alt="" style={{ objectFit: "cover" }} />
-      <p>Login Success, Enjoy Your Coffee</p>
-    </div>
+    <AuthWrapper style="h-full w-full text-center">
+      <img src={gif.loading} alt="" style={{ objectFit: "cover" }} />
+    </AuthWrapper>
   );
 };
 
