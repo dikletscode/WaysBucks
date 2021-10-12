@@ -1,16 +1,7 @@
 import React from "react";
-import { image } from "../assets/assetsRegister";
-import logo from "./Vector.png";
+import { image } from "../../assets/assetsRegister";
 
 const Logo = () => {
-  return (
-    <div>
-      <img
-        src={image.logo}
-        alt=""
-        style={{ height: "55px", width: "55px", objectFit: "cover" }}
-      />
-    </div>
-  );
+  return <img src={image.logo} alt="" className="h-16 w-16 object-cover" />;
 };
 export default Logo;

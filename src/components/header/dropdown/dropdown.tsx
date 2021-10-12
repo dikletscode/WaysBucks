@@ -1,5 +1,5 @@
 import React, { CSSProperties, useContext, useState } from "react";
-import { icon } from "../../assets/assetsRegister";
+import { icon } from "../../../assets/assetsRegister";
 
 import AuthContext from "../../../context/context";
 import { Link } from "react-router-dom";
@@ -34,21 +34,22 @@ const DropDown = ({
     localStorage.removeItem("_user");
     dispatch({ type: "LOGIN_FAILED", payload: null });
   };
-  console.log(state);
+
   return (
     <>
       <div
-        className="absolute bg-white shadow-main w-40 right-16 "
+        className="absolute bg-white shadow-main w-40 "
+        style={{ right: "4.2rem", top: "5rem" }}
         onMouseLeave={close}
       >
         {state.isAdmin ? (
           isOpen ? (
             <>
               <div style={style.triangle}></div>
-              <Link to="/add/product">
+              <Link to="/admin/product">
                 <Image image={icon.addProduct} inner="Add Product" />
               </Link>
-              <Link to="/add/topping">
+              <Link to="/admin/topping">
                 <Image image={icon.topping} inner="Add Topping" />
               </Link>
 
@@ -61,10 +62,7 @@ const DropDown = ({
           <>
             <div style={style.triangle}></div>
             <Link to="/profile">
-              <Image
-                image={state.avatar ? state.avatar : icon.profile}
-                inner="Profile"
-              />
+              <Image image={icon.profile} inner="Profile" />
             </Link>
             <Image image={icon.logout} inner="Logout" klik={logoutAction} />
           </>
@@ -87,6 +85,7 @@ const style = {
     position: "absolute",
     borderBottom: "20px solid white",
     top: "-15px",
+
     boxShadow: "0px 20px 4px rgba(0, 0, 0, 0), 4px 4px 20px rgba(0, 0, 0, 0)",
   } as CSSProperties,
 };

@@ -19,7 +19,8 @@ const eventReducer = (
     case "CLOSE_MODAL":
       return {
         ...state,
-        klik: false,
+        signin: false,
+        login: false,
       };
 
     default:

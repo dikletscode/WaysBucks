@@ -1,12 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Logo from "./logo";
 import Icon from "./micro/icon";
 import AuthContext, { EventContext } from "../../context/context";
 import Button from "./micro/button";
-import Login from "../modal/auth/login";
-import Signup from "../modal/auth/signup";
+import Login from "../../modal/auth/login";
+import Signup from "../../modal/auth/signup";
 import DropDown from "./dropdown/dropdown";
-import { Link } from "react-router-dom";
+
+import { Link, useLocation } from "react-router-dom";
+import { image } from "../../assets/assetsRegister";
 
 const Header = () => {
   const { state } = useContext(AuthContext);
@@ -17,6 +19,7 @@ const Header = () => {
     eventDispatch({ type: fieldNow, payload: false });
     eventDispatch({ type: fieldTo, payload: true });
   };
+
   const toogle = () => {
     if (isLogout) {
       setLogout(false);
@@ -39,12 +42,16 @@ const Header = () => {
         switchModal={() => switchModal("MODAL_SIGNIN", "MODAL_LOGIN")}
       />
 
-      <div className="flex justify-between fixed bg-white w-full items-center px-16 py-7">
+      <div className="flex shadow-lg justify-between z-10 fixed bg-white w-full items-center md:px-16 sm:px-16 lg:px-16 xs:px-6 py-2">
         <Logo />
 
-        {state.isLogin ? (
+        {state && state.isLogin ? (
           <div>
-            <Icon toogle={toogle} />
+            <Icon
+              toogle={toogle}
+              close={() => setLogout(false)}
+              open={() => setLogout(true)}
+            />
             <DropDown isOpen={isLogout} close={() => setLogout(false)} />
           </div>
         ) : (
