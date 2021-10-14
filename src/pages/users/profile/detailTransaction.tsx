@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import QRCode from "qrcode.react";
-import { HistoryTransaction, Transaction } from "../../../services/transaction";
+import { HistoryTransaction } from "../../../types/transaction";
 import { gif, image } from "../../../assets/assetsRegister";
-import convert from "../../../components/function/convertCurrency";
-import StatusTransac from "./statusColor";
+import convert from "../../../function/convertCurrency";
 import { API } from "../../../config/axios";
 
 const DetailTransaction: FC<{ open: boolean; id: number; close: () => void }> =

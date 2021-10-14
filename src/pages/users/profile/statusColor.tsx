@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { enumTransaction } from "../../../components/types/roleEnum";
+import { enumTransaction } from "../../../types/roleEnum";
 
 export const StatusTransac: FC<{ status: string }> = ({ status }) => {
   switch (status) {

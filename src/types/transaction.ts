@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { API } from "../config/axios";
-import { Product } from "../types/product";
+import { ProductTypes } from "../types/product";
 export type ToppingTypes = {
   id: number;
   title: string;
@@ -10,7 +10,7 @@ export type ToppingTypes = {
 
 export type Transaction = {
   id: number;
-  product: Product;
+  product: ProductTypes;
   toppings: ToppingTypes[];
   createdAt: Date;
   price: number;

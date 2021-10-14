@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API } from "../../config/axios";
-import { Product } from "../../types/product";
+import { ProductTypes } from "../../types/product";
 
 const ListProduct = () => {
-  const [product, setProduct] = useState<Product[]>([]);
+  const [product, setProduct] = useState<ProductTypes[]>([]);
 
   const fetch = async () => {
     try {

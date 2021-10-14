@@ -32,7 +32,7 @@ const DropDown = ({
   const logoutAction = () => {
     close();
     localStorage.removeItem("_user");
-    dispatch({ type: "LOGIN_FAILED", payload: null });
+    dispatch({ type: "INVALID_USER", payload: null });
   };
 
   return (

@@ -6,11 +6,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import Input, { Submit } from "../../components/custom/components/input";
+import Input, { Submit } from "../../components/input";
 import { LoginProps } from "./login";
-import Wrapper from "../../components/custom/components/wrapper";
+import Wrapper from "../../components/wrapper";
 
-import InputValidation from "../../components/custom/components/inputValidation";
+import InputValidation from "../../components/inputValidation";
 import { API } from "../../config/axios";
 
 const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {

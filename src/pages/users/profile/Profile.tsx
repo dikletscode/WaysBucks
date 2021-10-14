@@ -5,12 +5,15 @@ import { ProfileType } from "./user";
 const Profile: React.FC<{
   user: ProfileType | null;
   handleImage: (e: ChangeEvent<HTMLInputElement>) => void;
-  memberSince: string | null;
-}> = ({ user, handleImage, memberSince }) => {
+}> = ({ user, handleImage }) => {
+  let date = (db: Date) => {
+    let dt = new Date(db);
+    return dt.toDateString();
+  };
   return (
     <>
       {user ? (
-        <div className="bg-white p-3 border-t-4 w-1/3 border-gray-300">
+        <div className="bg-white p-3 border-t-4 mx-auto lg:mx-0 lg:w-1/3 border-gray-300">
           <div className=" overflow-hidden flex  justify-center">
             <label className="border-2  inline-block  cursor-pointer bg-red-500  ">
               <input
@@ -48,7 +51,7 @@ const Profile: React.FC<{
             </li>
             <li className="flex items-center py-3">
               <span>Member since</span>
-              <span className="ml-auto">{memberSince}</span>
+              <span className="ml-auto">{date(user.createdAt)}</span>
             </li>
           </ul>
         </div>

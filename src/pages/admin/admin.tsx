@@ -2,11 +2,10 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FC } from "react";
 import SendNotification from "../../modal/notification/sendNotif";
 
-import { HistoryTransaction } from "../../services/transaction";
+import { HistoryTransaction } from "../../types/transaction";
 import { gif, icon, image } from "../../assets/assetsRegister";
-import convert from "../../components/function/convertCurrency";
-import { enumTransaction } from "../../components/types/roleEnum";
-import { io } from "socket.io-client";
+import convert from "../../function/convertCurrency";
+import { enumTransaction } from "../../types/roleEnum";
 import { API } from "../../config/axios";
 
 const Dashboard = () => {

@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { EventContext } from "../../context/context";
 import { gif } from "../../assets/assetsRegister";
-import Wrapper from "../../components/custom/components/wrapper";
+import Wrapper from "../../components/wrapper";
 
 const Congrats = () => {
   const { eventDispatch } = useContext(EventContext);

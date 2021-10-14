@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { EventContext } from "../../../context/context";
+import { EventContext } from "../context/context";
 
 const Wrapper = ({
   children,

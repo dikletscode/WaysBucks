@@ -1,4 +1,4 @@
-const getToppingId = (isSelected: boolean[], topping: any[]) => {
+const getSelected = (isSelected: boolean[], topping: any[]) => {
   let arr: any[] = [];
   isSelected.map((item, index) => {
     if (item === true) {
@@ -8,4 +8,4 @@ const getToppingId = (isSelected: boolean[], topping: any[]) => {
   return arr;
 };
 
-export default getToppingId;
+export default getSelected;

@@ -3,21 +3,21 @@ const Reducer = (
   { type, payload }: { type: string; payload: object | null }
 ) => {
   switch (type) {
-    case "BUYYER_LOGIN_SUCCESS":
+    case "BUYYER":
       return {
         ...state,
         isLogin: true,
         isAdmin: false,
         data: payload,
       };
-    case "LOGIN_FAILED":
+    case "INVALID_USER":
       return {
         ...state,
         isLogin: false,
         isAdmin: false,
         data: null,
       };
-    case "ADMIN_LOGIN_SUCCESS":
+    case "ADMIN":
       return {
         ...state,
         isLogin: true,

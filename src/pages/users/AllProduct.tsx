@@ -1,17 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext, { EventContext } from "../../context/context";
-import { Product, BestProduct } from "../../types/product";
-import convert from "../../components/function/convertCurrency";
-
-import Login from "../../modal/auth/login";
-import { image } from "../../assets/assetsRegister";
+import { ProductTypes, BestProduct } from "../../types/product";
+import convert from "../../function/convertCurrency";
 import { API } from "../../config/axios";
 
 const AllProducts = () => {
   const { state } = useContext(AuthContext);
   const { eventState, eventDispatch } = useContext(EventContext);
-  const [listProduct, setProduct] = useState<Product[]>([]);
+  const [listProduct, setProduct] = useState<ProductTypes[]>([]);
   const [bestProduct, setBestProduct] = useState<number[]>([]);
   const history = useHistory();
 
@@ -40,7 +37,6 @@ const AllProducts = () => {
 
   return (
     <div className="pt-28 mx-24">
-      {" "}
       <section className="mt-6  grid mb-9 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-8">
         {listProduct.map((item, index) => {
           return (

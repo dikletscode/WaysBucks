@@ -1,17 +1,17 @@
 import { ChangeEvent, CSSProperties, FormEvent, useState } from "react";
 
-import Input, { Submit } from "../../components/custom/components/input";
+import Input, { Submit } from "../../components/input";
 
 import { image } from "../../assets/assetsRegister";
 
-import { AddProductType } from "../../services/product";
+import { AddProductType } from "../../types/product";
 import SuccessCreate from "../../modal/another/addProduct";
 import { useLocation } from "react-router";
-import { Product } from "../../types/product";
+import { ProductTypes } from "../../types/product";
 import { API } from "../../config/axios";
 
 const EditTopping = () => {
-  const item: Product = useLocation<Product>().state;
+  const item: ProductTypes = useLocation<ProductTypes>().state;
   const [input, setInput] = useState<AddProductType>({
     title: item.title,
     price: item.price.toString(),

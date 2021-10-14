@@ -13,21 +13,6 @@ import AuthContext from "../../context/context";
 import Message from "./message";
 import { API } from "../../config/axios";
 
-interface UserType {
-  userID: string;
-  self: boolean;
-  fullname: string;
-  messages: any[];
-  hasNewMessages: boolean;
-}
-interface MessageType {
-  senderId: string;
-  text: string;
-}
-interface UserType {
-  userId: string;
-  scoketId: string;
-}
 export interface ListUser {
   id: string;
   email: string;

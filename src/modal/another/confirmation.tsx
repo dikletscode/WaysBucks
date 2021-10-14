@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 import { gif } from "../../assets/assetsRegister";
-import Wrapper from "../../components/custom/components/wrapper";
+import Wrapper from "../../components/wrapper";
 import { Button } from "../../pages/admin/admin";
-import { enumTransaction } from "../../components/types/roleEnum";
+import { enumTransaction } from "../../types/roleEnum";
 import { API } from "../../config/axios";
 
 const Confirmation: FC<{
@@ -19,6 +19,7 @@ const Confirmation: FC<{
           status: enumTransaction.SUCCESS,
         });
         setSuccess(true);
+        close();
       } catch (error) {
         setSuccess(false);
         console.log(error);

@@ -1,12 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-
-import Input, { Submit } from "../../components/custom/components/input";
-
+import Input, { Submit } from "../../components/input";
 import { image } from "../../assets/assetsRegister";
-
-import { AddProductType } from "../../services/product";
 import SuccessCreate from "../../modal/another/addProduct";
 import { API } from "../../config/axios";
+import { AddProductType } from "../../types/product";
 
 const AddProduct = () => {
   const [input, setInput] = useState<AddProductType>({

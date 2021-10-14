@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext, { EventContext } from "../../../context/context";
-import { BestProduct, Product } from "../../../types/product";
-import convert from "../../../components/function/convertCurrency";
-
-import Login from "../../../modal/auth/login";
-import { image } from "../../../assets/assetsRegister";
+import { BestProduct, ProductTypes } from "../../../types/product";
+import convert from "../../../function/convertCurrency";
 import { API } from "../../../config/axios";
 
 const ProductCard = () => {
   const { state } = useContext(AuthContext);
-  const { eventState, eventDispatch } = useContext(EventContext);
+  const { eventDispatch } = useContext(EventContext);
   const [listProduct, setProduct] = useState<BestProduct[]>([]);
   const [bestProduct, setBestProduct] = useState<number[]>([]);
   const history = useHistory();
@@ -42,11 +39,9 @@ const ProductCard = () => {
       console.log(error);
     }
   };
-  console.log(bestProduct, listProduct);
 
   useEffect(() => {
     fetch();
-
     return () => setBestProduct([]);
   }, []);
   useEffect(() => {
@@ -70,7 +65,7 @@ const ProductCard = () => {
 
   return (
     <>
-      <section className="mt-6  grid mb-9  md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-8">
+      <section className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 mb-10 lg:grid-cols-2 xl:grid-cols-4">
         {listProduct.map((item, index) => {
           return (
             <article

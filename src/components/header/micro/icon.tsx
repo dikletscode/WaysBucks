@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AuthContext, { CartContext } from "../../../context/context";
 import { icon, image } from "../../../assets/assetsRegister";
 import { API } from "../../../config/axios";
-import { ProductTopping } from "../../../pages/users/detail/detail";
+import { ProductTopping } from "../../../pages/users/detail";
 
 const Icon = ({
   toogle,
@@ -16,7 +16,6 @@ const Icon = ({
 }) => {
   const { state } = useContext(AuthContext);
   const { increment, cartState } = useContext(CartContext);
-  const [klik, setKlik] = useState(false);
 
   useEffect(() => {
     const getProductCart = async () => {

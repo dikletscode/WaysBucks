@@ -1,11 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-
-import Input, { Submit } from "../../components/custom/components/input";
-
+import Input, { Submit } from "../../components/input";
 import { image } from "../../assets/assetsRegister";
-
-import { AddProductType } from "../../services/product";
-
+import { AddProductType } from "../../types/product";
 import SuccessCreate from "../../modal/another/addProduct";
 import { API } from "../../config/axios";
 
@@ -48,7 +44,7 @@ const AddTopping = () => {
       try {
         setPopUp(true);
         setIsLoading(true);
-        await API.post("topping", FormData, {
+        await API.post("topping", forms, {
           headers: {
             "content-type": "multipart/form-data",
           },

@@ -1,23 +1,16 @@
 import { ChangeEvent, useMemo } from "react";
-import { useCallback } from "react";
-import {
-  CSSProperties,
-  FormEvent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { CartContext } from "../../../context/context";
+import { CartContext } from "../../context/context";
 
-import { Submit } from "../../../components/custom/components/input";
-import FailedRequest from "../../../modal/another/failed";
+import { Submit } from "../../components/input";
+import FailedRequest from "../../modal/another/failed";
 
-import convert from "../../../components/function/convertCurrency";
-import getToppingId from "../../../components/function/getTopping";
-import { ProductTypes } from "../../../components/types/interface";
-import checkIsExist from "../../../components/function/checkIsExist";
-import { API } from "../../../config/axios";
+import convert from "../../function/convertCurrency";
+import getSelected from "../../function/getSelected";
+import { ProductTypes } from "../../types/product";
+import checkIsExist from "../../function/checkIsExist";
+import { API } from "../../config/axios";
 
 const calculate = (arr: number[], arr2: number[]) => {
   let a = 0;
@@ -75,7 +68,7 @@ const Detail = () => {
   };
 
   const toppingSelected = useMemo(() => {
-    return getToppingId(klik, toppings);
+    return getSelected(klik, toppings);
   }, [klik, toppings]);
 
   const getProductCart = async () => {

@@ -1,20 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { gif } from "./assets/assetsRegister";
 import Header from "./components/header/header";
 import Cart from "./pages/users/Cart";
-import Detail from "./pages/users/detail/detail";
+import Detail from "./pages/users/detail";
 import HomePage from "./pages/users/home/HomePage";
 import AddProduct from "./pages/admin/addProduct";
-import UserProfile from "./pages/users/profile/user";
 import AddTopping from "./pages/admin/addTopping";
-import { role } from "./components/types/roleEnum";
+import { role } from "./types/roleEnum";
 import AuthContext from "./context/context";
 import PrivateRoute from "./router/private";
 import Dashboard from "./pages/admin/admin";
-import { setAuthToken } from "./config/axios";
-import Footer from "./components/header/footer";
+import { API, setAuthToken } from "./config/axios";
 import MenuAdmin from "./pages/admin/Menu";
 import ListProduct from "./pages/admin/ListProduct";
 import EditProduct from "./pages/admin/editProduct";
@@ -27,27 +25,37 @@ import AllProducts from "./pages/users/AllProduct";
 function App() {
   const { state, dispatch } = useContext(AuthContext);
 
+  const getProfile = async () => {
+    try {
+      let res = await API.get("user");
+      let data = res.data.users;
+
+      if (role.SELLER === data.role) {
+        dispatch({
+          type: "ADMIN",
+          payload: data,
+        });
+      } else if (role.BUYYER === data.role) {
+        dispatch({
+          type: "BUYYER",
+          payload: data,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const loginUser = localStorage.getItem("_user");
 
   useEffect(() => {
     if (loginUser) {
       const data = JSON.parse(loginUser);
       setAuthToken(data.token);
-      console.log(data, "dataaaa");
-      if (role.SELLER === data.user.role) {
-        dispatch({
-          type: "ADMIN_LOGIN_SUCCESS",
-          payload: data?.user,
-        });
-      } else if (role.BUYYER === data.user.role) {
-        dispatch({
-          type: "BUYYER_LOGIN_SUCCESS",
-          payload: data?.user,
-        });
-      }
+      getProfile();
     } else {
       setAuthToken(null);
-      dispatch({ type: "LOGIN_FAILED", payload: null });
+      dispatch({ type: "INVALID_USER", payload: null });
     }
   }, [loginUser]);
 
@@ -88,12 +96,7 @@ function App() {
           restricted
         />
         <PrivateRoute component={GetAllUser} path="/chat" exact />
-        {/* <PrivateRoute
-          component={GetAllUser}
-          path="/admin/users"
-          exact
-          restricted
-        /> */}
+
         <PrivateRoute
           component={EditTopping}
           path="/admin/topping/:id"
@@ -116,7 +119,6 @@ function App() {
           restricted
         />
       </Switch>
-      {/* <Footer /> */}
     </Router>
   );
 }

@@ -1,9 +1,10 @@
 import React from "react";
 import { gif, image } from "../../../assets/assetsRegister";
-import convert from "../../../components/function/convertCurrency";
-import { HistoryTransaction } from "../../../services/transaction";
+import convert from "../../../function/convertCurrency";
+import { HistoryTransaction } from "../../../types/transaction";
 import QRCode from "qrcode.react";
 import StatusTransac from "./statusColor";
+import { enumTransaction } from "../../../types/roleEnum";
 
 const Transaction: React.FC<{
   transaction: HistoryTransaction[];
@@ -16,7 +17,7 @@ const Transaction: React.FC<{
       dt.toLocaleDateString() + " " + dt.getHours() + "." + dt.getSeconds()
     );
   };
-  console.log(transaction, "tessssssssssst");
+
   return (
     <>
       {transaction.length ? (
@@ -25,21 +26,21 @@ const Transaction: React.FC<{
             <div key={index} className=" pb-8">
               <div className="bg-red-200 w-full flex flex-col items-center justify-between">
                 <div className="w-full flex items-center justify-between">
-                  <div className="w-7/12 flex flex-col items-center content-center ">
+                  <div className=" flex flex-col items-center ">
                     {item.history.map((item2, index) => {
                       return (
                         <div
                           key={index}
-                          className="flex w-full items-center justify-around p-6  "
+                          className="flex w-full items-center  p-6  "
                         >
                           <img
                             src={item2.product?.image}
                             alt=""
-                            className="h-28 w-32 object-cover rounded-lg"
+                            className=" w-24 h-36 object-cover rounded-lg"
                           />
 
                           <div
-                            className="w-9/12 pl-6"
+                            className=" pl-6 hidden lg:block"
                             style={{
                               color: "#BD0707",
                               fontFamily: "'Josefin Sans', sans-serif",
@@ -61,14 +62,14 @@ const Transaction: React.FC<{
                       );
                     })}
                   </div>
-                  <div className="flex items-center  py-10 pr-5">
-                    <div className="flex flex-col items-center">
+                  <div className="flex items-center flex-wrap py-10 pr-5">
+                    <div className="flex flex-col  items-center">
                       <img
                         src={image.logo}
                         alt=""
                         className="h-14 w-14 object-cover "
                       />
-                      <div className="py-7">
+                      <div className="py-7 object-contain">
                         <QRCode
                           value={JSON.stringify({
                             transactionId: item.id,
@@ -78,7 +79,13 @@ const Transaction: React.FC<{
                           bgColor="rgba(254, 202, 202,0.2)"
                         />
                       </div>
-                      <div onClick={() => confirmModal(item.id)}>
+                      <div
+                        onClick={
+                          item.status === enumTransaction.OTW
+                            ? () => confirmModal(item.id)
+                            : undefined
+                        }
+                      >
                         <StatusTransac status={item.status} />
                       </div>
                       <p className="text-xs">
@@ -89,16 +96,12 @@ const Transaction: React.FC<{
                     </div>
                   </div>
                 </div>
-                {item.history.length > 1 ? (
-                  <div
-                    className="self-start ml-7 p-2 cursor-pointer text-base border-2 border-red-400 bg-red-100 rounded-3xl mb-6"
-                    onClick={() => openDetail(item.id)}
-                  >
-                    other purchased products
-                  </div>
-                ) : (
-                  <></>
-                )}
+                <div
+                  className="  mx-auto  p-2 cursor-pointer text-base  "
+                  onClick={() => openDetail(item.id)}
+                >
+                  detail
+                </div>
               </div>
             </div>
           );

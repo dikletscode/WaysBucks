@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { HistoryTransaction } from "../../../services/transaction";
+import { HistoryTransaction } from "../../../types/transaction";
 import Profile from "./Profile";
 import AuthContext from "../../../context/context";
 import FailedRequest from "../../../modal/another/failed";
@@ -28,7 +28,7 @@ export interface ProfileType {
 const UserProfile = () => {
   const [transaction, setTransaction] = useState<HistoryTransaction[]>([]);
   const loginUser = localStorage.getItem("_user");
-  const { dispatch } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
   const [update, setUpdate] = useState(false);
   const [user, setUser] = useState<ProfileType | null>(null);
   const [isError, setError] = useState(false);
@@ -39,32 +39,17 @@ const UserProfile = () => {
   const [idTransac, setIdTranasac] = useState(0);
   const fetchTransaction = async () => {
     try {
-      let res = await API.get("orders", { params: { limit: 2 } });
-      console.log(res.data, "opopp");
-      if (res.data) {
-        setTransaction(res.data);
-      }
+      let res = await API.get("orders");
+      const data = res.data;
+      data && setTransaction(data);
     } catch (error) {
       setError(true);
     }
   };
-  const getProfile = async () => {
-    try {
-      let res = await API.get("profile");
-      res.data && setUser(res.data.users);
-    } catch (error) {
-      setError(true);
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getProfile();
-  }, [update]);
 
   useEffect(() => {
     fetchTransaction();
-  }, []);
+  }, [openConfirm]);
 
   const formData = new FormData();
   const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -78,18 +63,11 @@ const UserProfile = () => {
     }
     const upload = async () => {
       try {
-        setUpdate(true);
-        let res = await API.patch("user", formData, {
+        await API.patch("user", formData, {
           headers: {
             "content-type": "multipart/form-data",
           },
         });
-
-        const json = loginUser && JSON.parse(loginUser);
-        json["user"]["profile"]["image"] = res.data?.users?.profile?.image;
-        localStorage.setItem("_user", JSON.stringify(json));
-        dispatch({ type: "BUYYER_LOGIN_SUCCESS", payload: json.user });
-        setUpdate(false);
       } catch (error: any) {
         setError(true);
       }
@@ -107,11 +85,6 @@ const UserProfile = () => {
     setOpenConfirm(true);
     setIdTranasac(id);
   };
-  let date = (db: Date) => {
-    let dt = new Date(db);
-    return dt.toDateString();
-  };
-  console.log(user?.createdAt);
 
   return (
     <>
@@ -125,19 +98,15 @@ const UserProfile = () => {
         id={id}
         close={() => setOpenDetail(false)}
       />
-      <div className="container flex pt-32  mx-auto  justify-between px-11 ">
+      <div className="container flex pt-32  mx-auto  justify-between flex-wrap px-11 ">
         <FailedRequest
           error="an error occured"
           open={isError}
           close={() => setError(false)}
         />
 
-        <Profile
-          user={user}
-          handleImage={handleImage}
-          memberSince={user && date(user?.createdAt)}
-        />
-        <div className=" w-1/2   ">
+        <Profile user={state.data} handleImage={handleImage} />
+        <div className=" lg:w-1/2   ">
           <h2 className="text-base text-3xl pb-5">My Transaction</h2>
 
           <div

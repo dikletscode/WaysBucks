@@ -1,13 +1,13 @@
 import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
-import Input, { Submit } from "../../components/custom/components/input";
+import Input, { Submit } from "../../components/input";
 import { gif, icon, image } from "../../assets/assetsRegister";
 import AuthContext from "../../context/context";
-import { role } from "../../components/types/roleEnum";
+import { role } from "../../types/roleEnum";
 import { Redirect } from "react-router-dom";
 import Congrats from "../another/congrats";
-import Wrapper from "../../components/custom/components/wrapper";
+import Wrapper from "../../components/wrapper";
 import { useEffect } from "react";
-import InputValidation from "../../components/custom/components/inputValidation";
+import InputValidation from "../../components/inputValidation";
 import { API } from "../../config/axios";
 
 export interface LoginProps {
@@ -76,10 +76,10 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
         let res = await API.post("login", user);
         localStorage.setItem("_user", JSON.stringify(res.data));
         if (res.data.user.role == role.SELLER) {
-          dispatch({ type: "ADMIN_LOGIN_SUCCESS", payload: res.data.user });
+          dispatch({ type: "ADMIN", payload: res.data.user });
         }
         if (res.data.user.role == role.BUYYER) {
-          dispatch({ type: "BUYYER_LOGIN_SUCCESS", payload: res.data.user });
+          dispatch({ type: "BUYYER", payload: res.data.user });
         }
         setMessageError(messageInit);
         setUser(userInit);

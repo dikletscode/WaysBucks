@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API } from "../../config/axios";
-import { Product } from "../../types/product";
-import { ToppingTypes } from "../users/detail/detail";
+import { ProductTypes } from "../../types/product";
+import { ToppingTypes } from "../users/detail";
 
 const ListTopping = () => {
-  const [topping, setTopping] = useState<Product[]>([]);
+  const [topping, setTopping] = useState<ProductTypes[]>([]);
 
   const fetch = async () => {
     try {

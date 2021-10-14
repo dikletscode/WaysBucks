@@ -1,11 +1,11 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 
 import { EventContext } from "../../context/context";
-import { HistoryTransaction } from "../../services/transaction";
+import { HistoryTransaction } from "../../types/transaction";
 import { gif } from "../../assets/assetsRegister";
-import Input, { Submit } from "../../components/custom/components/input";
+import Input, { Submit } from "../../components/input";
 import { Button } from "../../pages/admin/admin";
-import { enumTransaction } from "../../components/types/roleEnum";
+import { enumTransaction } from "../../types/roleEnum";
 import { API } from "../../config/axios";
 
 const SendNotification = ({
