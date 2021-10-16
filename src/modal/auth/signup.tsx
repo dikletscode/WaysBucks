@@ -1,16 +1,7 @@
-import {
-  ChangeEvent,
-  FC,
-  FormEvent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import Input, { Submit } from "../../components/input";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import { Input, Submit, MessageValidation } from "../../components/atoms";
 import { LoginProps } from "./login";
-import Wrapper from "../../components/wrapper";
-
-import InputValidation from "../../components/inputValidation";
+import { Wrapper } from "../../components/molecules";
 import { API } from "../../config/axios";
 
 const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
@@ -107,12 +98,12 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
           <h1 className="text-base pl-5 font-semibold text-3xl">Register</h1>
           <form action="" className="pt-5" onSubmit={submit}>
             {messageError.fullname ? (
-              <InputValidation
+              <MessageValidation
                 message={messageError.fullname}
                 error={error.fullname}
               />
             ) : (
-              <InputValidation
+              <MessageValidation
                 message={messageError.server}
                 error={error.server}
               />
@@ -129,7 +120,10 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
               className="py-1"
             />
 
-            <InputValidation message={messageError.email} error={error.email} />
+            <MessageValidation
+              message={messageError.email}
+              error={error.email}
+            />
 
             <Input
               type="email"
@@ -140,7 +134,7 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
               change={handleChange}
               className="py-1"
             />
-            <InputValidation
+            <MessageValidation
               message={messageError.password}
               error={error.password}
             />

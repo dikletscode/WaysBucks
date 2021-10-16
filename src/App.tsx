@@ -2,25 +2,26 @@ import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { gif } from "./assets/assetsRegister";
-import Header from "./components/header/header";
-import Cart from "./pages/users/Cart";
-import Detail from "./pages/users/detail";
-import HomePage from "./pages/users/home/HomePage";
-import AddProduct from "./pages/admin/addProduct";
-import AddTopping from "./pages/admin/addTopping";
+import { Header } from "./components";
+
+import {
+  AddProduct,
+  AddTopping,
+  Dashboard,
+  EditProduct,
+  EditTopping,
+  MenuAdmin,
+  Chat,
+  AllProducts,
+  HomePage,
+  ProfileWithErrorBoundary,
+  Cart,
+  Detail,
+} from "./pages";
 import { role } from "./types/roleEnum";
 import AuthContext from "./context/context";
 import PrivateRoute from "./router/private";
-import Dashboard from "./pages/admin/admin";
 import { API, setAuthToken } from "./config/axios";
-import MenuAdmin from "./pages/admin/Menu";
-import ListProduct from "./pages/admin/ListProduct";
-import EditProduct from "./pages/admin/editProduct";
-import ListTopping from "./pages/admin/ListTopping";
-import EditTopping from "./pages/admin/EditTopping";
-import GetAllUser from "./pages/admin/ListUsers";
-import ProfileWithErrorBoundary from "./pages/users/profile/user";
-import AllProducts from "./pages/users/AllProduct";
 
 function App() {
   const { state, dispatch } = useContext(AuthContext);
@@ -77,25 +78,14 @@ function App() {
           exact
           restricted
         />
-        <PrivateRoute
-          component={ListProduct}
-          path="/listproduct"
-          exact
-          restricted
-        />
-        <PrivateRoute
-          component={ListTopping}
-          path="/listtopping"
-          exact
-          restricted
-        />
+
         <PrivateRoute
           component={EditProduct}
           path="/admin/product/:id"
           exact
           restricted
         />
-        <PrivateRoute component={GetAllUser} path="/chat" exact />
+        <PrivateRoute component={Chat} path="/chat" exact />
 
         <PrivateRoute
           component={EditTopping}

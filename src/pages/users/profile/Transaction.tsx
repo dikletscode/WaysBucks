@@ -1,9 +1,9 @@
 import React from "react";
-import { gif, image } from "../../../assets/assetsRegister";
-import convert from "../../../function/convertCurrency";
+import { image } from "../../../assets/assetsRegister";
+import convert from "../../../utils/convertCurrency";
 import { HistoryTransaction } from "../../../types/transaction";
 import QRCode from "qrcode.react";
-import StatusTransac from "./statusColor";
+import { StatusTransac } from "../../../components";
 import { enumTransaction } from "../../../types/roleEnum";
 
 const Transaction: React.FC<{

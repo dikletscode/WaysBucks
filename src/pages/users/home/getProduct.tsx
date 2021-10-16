@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext, { EventContext } from "../../../context/context";
 import { BestProduct, ProductTypes } from "../../../types/product";
-import convert from "../../../function/convertCurrency";
+import convert from "../../../utils/convertCurrency";
 import { API } from "../../../config/axios";
+import { Card, CardWrapper } from "../../../components";
 
 const ProductCard = () => {
   const { state } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const ProductCard = () => {
       console.log(error);
     }
   };
-  const coubt = async () => {
+  const fetchProduct = async () => {
     try {
       let res = await API.get("products");
       setProduct(
@@ -44,8 +45,9 @@ const ProductCard = () => {
     fetch();
     return () => setBestProduct([]);
   }, []);
+
   useEffect(() => {
-    coubt();
+    fetchProduct();
   }, [bestProduct]);
 
   const clickProduct = (id: number, data: object) => {
@@ -65,33 +67,17 @@ const ProductCard = () => {
 
   return (
     <>
-      <section className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 mb-10 lg:grid-cols-2 xl:grid-cols-4">
+      <CardWrapper>
         {listProduct.map((item, index) => {
           return (
-            <article
-              key={index}
-              onClick={() => clickProduct(item.id, item)}
-              className="bg-pink group relative rounded-lg o hover:shadow-sm transition duration-500 transform hover:scale-105 cursor-pointer"
-            >
-              <div className="relative w-full mx-auto rounded-lg h-72 md:h-56 lg:h-80">
-                <img
-                  src={item.image}
-                  alt=""
-                  className="w-full h-full rounded-lg   object-cover"
-                />
-              </div>
-              <div className="p-3">
-                <div>
-                  <p className="text-base font-semibold">{item.title}</p>
-                  <p style={{ color: "#BD0707", fontSize: "0.9em" }}>
-                    Rp.{convert(item.price.toString())}
-                  </p>
-                </div>
-              </div>
-            </article>
+            <Card
+              key={item.id}
+              handleKlik={() => clickProduct(item.id, item)}
+              item={item}
+            />
           );
         })}
-      </section>
+      </CardWrapper>
 
       <div className="text-center">
         <button

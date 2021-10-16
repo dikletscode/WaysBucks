@@ -20,7 +20,6 @@ import cart from "./images/cart.png";
 import defaultProfile from "./images/defaultProfile.png";
 import attachment from "./images/attach2.png";
 import topping2 from "./images/topping2.png";
-import notif from "./images/notif.jpg";
 import warn from "./images/warn.png";
 import paid from "./images/paid.jpg";
 
@@ -51,7 +50,7 @@ export const image = {
   cancel: cancel,
   attach: attachment,
   topping: topping2,
-  notif: notif,
+
   logo: logo,
   paid: paid,
 };

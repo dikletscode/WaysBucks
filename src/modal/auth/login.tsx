@@ -1,13 +1,17 @@
-import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
-import Input, { Submit } from "../../components/input";
-import { gif, icon, image } from "../../assets/assetsRegister";
+import {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
+import { Input, Submit, MessageValidation } from "../../components/atoms";
 import AuthContext from "../../context/context";
 import { role } from "../../types/roleEnum";
 import { Redirect } from "react-router-dom";
-import Congrats from "../another/congrats";
-import Wrapper from "../../components/wrapper";
-import { useEffect } from "react";
-import InputValidation from "../../components/inputValidation";
+import Congrats from "../alert/congrats";
+import { Wrapper } from "../../components/molecules";
 import { API } from "../../config/axios";
 
 export interface LoginProps {
@@ -84,8 +88,6 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
         setMessageError(messageInit);
         setUser(userInit);
       } catch (err: any) {
-        console.log(err.response, "ss");
-
         if (err.response && err.response.status == 401) {
           setError((prev) => ({ ...prev, ["server"]: true }));
           setMessageError((prev) => ({
@@ -132,7 +134,7 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
                   Login
                 </h1>
                 <form className="pt-1" onSubmit={submit} autoComplete="off">
-                  <InputValidation
+                  <MessageValidation
                     message={messageError.server}
                     error={error.server}
                   />
@@ -146,7 +148,7 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
                     notValid={error.email}
                     className="py-1"
                   />
-                  <InputValidation
+                  <MessageValidation
                     message={messageError.email}
                     error={error.email}
                   />
@@ -161,7 +163,7 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
                     notValid={error.password}
                     className="py-1"
                   />
-                  <InputValidation
+                  <MessageValidation
                     message={messageError.password}
                     error={error.password}
                   />

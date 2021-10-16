@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { icon } from "../../../assets/assetsRegister";
-import { ProfileType } from "./user";
+import { ProfileType } from ".";
 
 const Profile: React.FC<{
   user: ProfileType | null;
