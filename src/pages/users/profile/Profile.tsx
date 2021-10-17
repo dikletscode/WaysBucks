@@ -15,7 +15,32 @@ const Profile: React.FC<{
       {user ? (
         <div className="bg-white p-3 border-t-4 mx-auto lg:mx-0 lg:w-1/3 border-gray-300">
           <div className=" overflow-hidden flex  justify-center">
-            <label className="border-2  inline-block  cursor-pointer bg-red-500  ">
+            <div className="py-3 center mx-auto">
+              <div className="bg-white px-4 py-5 rounded-lg shadow-lg text-center w-48">
+                <div className="mb-4">
+                  <img
+                    className=" mx-auto rounded-full object-cover h-40 w-40 object-center"
+                    src={
+                      user?.profile.image
+                        ? user?.profile.image
+                        : icon.defaultProfile
+                    }
+                    alt="Avatar Upload"
+                  />
+                </div>
+                <label className="cursor-pointer mt-6">
+                  <span className="mt-2 leading-normal px-4 py-2 bg-blue-500 text-white text-sm rounded-full">
+                    Select Avatar
+                  </span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleImage}
+                  />
+                </label>
+              </div>
+            </div>
+            {/* <label className="border-2  inline-block  cursor-pointer bg-red-500  ">
               <input
                 type="file"
                 id="fullname"
@@ -24,14 +49,10 @@ const Profile: React.FC<{
               />
               <img
                 className="h-40 w-40 object-cover mx-auto"
-                src={
-                  user?.profile.image
-                    ? user?.profile.image
-                    : icon.defaultProfile
-                }
+               
                 alt=""
               />
-            </label>
+            </label> */}
           </div>
           <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
             {user.profile.fullname}
