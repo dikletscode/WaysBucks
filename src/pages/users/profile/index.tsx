@@ -26,7 +26,7 @@ export interface ProfileType {
 
 const UserProfile = () => {
   const [transaction, setTransaction] = useState<HistoryTransaction[]>([]);
-  const { state } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
 
   const [user, setUser] = useState<ProfileType | null>(null);
   const [isError, setError] = useState(false);
@@ -66,6 +66,12 @@ const UserProfile = () => {
             "content-type": "multipart/form-data",
           },
         });
+        let copyState = state.data;
+        if (copyState) {
+          copyState["profile"]["image"] =
+            e.target.files && URL.createObjectURL(e.target.files[0]);
+          dispatch({ type: "BUYYER", payload: copyState });
+        }
       } catch (error: any) {
         setError(true);
       }
