@@ -10,7 +10,7 @@ const Button = ({
   value: string;
 }) => {
   return (
-    <div className="  w-32 h-14  flex items-center justify-center">
+    <div className="  w-24 lg:w-32 h-14  flex items-center justify-center">
       <div
         className={`w-28 ${style} border-2 border-base text-white h-9 flex items-center justify-center`}
       >
