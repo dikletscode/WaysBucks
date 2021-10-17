@@ -23,7 +23,7 @@ export interface ListUser {
 }
 
 let socket: Socket;
-export const URL = "http://localhost:2021";
+export const URL = "https://waysbuck.herokuapp.com/api/v1";
 
 const Chat = () => {
   const [data, setData] = useState<ListUser[]>([]);

@@ -46,14 +46,14 @@ const HomePage = () => {
                           />
                         </div>
 
-                        <h1 className="text-6xl font-bold   lg:px-9">
+                        <h1 className="text-4xl lg:text-6xl font-bold pt-7  lg:px-9">
                           WAYSBUCK
                         </h1>
 
                         <div className="mx-auto lg:mx-0 w-4/5  border-b-2 border-green-500 opacity-25"></div>
                         <div className="w-full ">
                           <div className="lg:w-6/12 ">
-                            <p className="pt-8 px-9 text-xl font-sans">
+                            <p className="pt-8 px-3 text-xl font-sans">
                               <p className="">
                                 Things are changing, but we’re still here for
                                 you
@@ -118,7 +118,7 @@ const HomePage = () => {
 
       <div
         onClick={clickChat}
-        className="fixed flex bg-white px-3 py-1 lg:py-3 lg:px-7 shadow-md rounded-xl items-center justify-between right-10 bottom-0"
+        className="fixed flex bg-white px-3 py-1 lg:py-3 lg:px-7 shadow-md rounded-xl items-center justify-between right-0 bottom-0"
       >
         <img src={chat} className="h-10 w-10 mr-3" />
         <p>Chat</p>
