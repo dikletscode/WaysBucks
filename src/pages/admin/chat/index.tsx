@@ -152,8 +152,8 @@ const Chat = () => {
     <>
       {data && onlineUser.length && state.data ? (
         <div
-          className={`container mx-auto shadow-lg rounded-lg ${
-            state.isAdmin ? "pt-10" : "pt-32"
+          className={`container mx-auto shadow-lg  rounded-lg ${
+            state.isAdmin ? "pt-10" : "pt-24 lg:pt-32"
           }`}
         >
           <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
@@ -183,7 +183,7 @@ const Chat = () => {
           </div>
 
           <div className="flex flex-row justify-between bg-white">
-            <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+            <div className="lg:flex hidden  flex-col w-2/5 border-r-2 overflow-y-auto">
               <div className="border-b-2 py-4 px-2">
                 <input
                   type="text"
