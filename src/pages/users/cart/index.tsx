@@ -297,22 +297,30 @@ const Cart = () => {
                               }}
                             ></textarea>
                             <div className="bg-cream mx-auto  w-48  mt-4 border-2 border-base">
-                              <div className=" w-full h-28 flex items-center justify-center">
-                                <label htmlFor="">
-                                  <input
-                                    type="file"
-                                    onChange={handleImage}
-                                    className=" h-full opacity-0 absolute z-0"
-                                  />
-                                  <img
-                                    src={
-                                      attach
-                                        ? URL.createObjectURL(attach)
-                                        : icon.attach
-                                    }
-                                    className="h-14 object-cover w-12"
-                                  />
-                                </label>
+                              <div className="py-3 center mx-auto">
+                                <div className="bg-white px-4 py-5 rounded-lg shadow-lg text-center w-48">
+                                  <div className="mb-4">
+                                    <img
+                                      className=" mx-auto rounded-full object-cover h-40 w-40 object-center"
+                                      src={
+                                        attach
+                                          ? URL.createObjectURL(attach)
+                                          : icon.attach
+                                      }
+                                      alt="Avatar Upload"
+                                    />
+                                  </div>
+                                  <label className="cursor-pointer mt-6">
+                                    <span className="mt-2 leading-normal px-4 py-2 bg-base text-white text-sm rounded-full">
+                                      Select Avatar
+                                    </span>
+                                    <input
+                                      type="file"
+                                      className="hidden"
+                                      onChange={handleImage}
+                                    />
+                                  </label>
+                                </div>
                               </div>
                             </div>
                           </div>
