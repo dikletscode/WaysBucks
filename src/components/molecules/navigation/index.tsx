@@ -41,7 +41,7 @@ const Navigation = ({
           </Link>
         </div>
       ) : (
-        <div className="w-10 h-10 relative mr-4 flex items-center ">
+        <div className="w-9 h-9 relative mr-4 flex items-center ">
           {cartState == 0 ? (
             <></>
           ) : (
@@ -50,7 +50,7 @@ const Navigation = ({
             </div>
           )}
           <Link to="/cart">
-            <img src={icon.cart} alt="" className=" h-10  w-10 object-cover " />
+            <img src={icon.cart} alt="" className=" h-9  w-9 object-cover " />
           </Link>
         </div>
       )}

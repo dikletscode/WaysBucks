@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { ErrorFallback, Input, Submit } from "../../../components";
-import { icon, image } from "../../../assets/assetsRegister";
+import { gif, icon, image } from "../../../assets/assetsRegister";
 import { SuccessPayment } from "../../../modal";
 import convert from "../../../utils/convertCurrency";
 import { Wrapper } from "../../../components";
@@ -115,16 +115,10 @@ const Cart = () => {
           }
           const postTransact = async () => {
             try {
-              setPopUp(true);
-              setIsLoading(true);
-              setIsLoading(false);
               attach &&
                 (await API.post("transaction", form, {
                   headers: { "content-type": "multipart/form-data" },
                 }));
-              setAttach(null);
-              setPopUp(false);
-              history.replace("profile");
             } catch (error) {
               handleError(error);
               console.log(error);
@@ -171,10 +165,11 @@ const Cart = () => {
     };
   }, []);
 
+  if (!cart.length) {
+    return <img src={gif.loading} alt="" />;
+  }
   return (
     <>
-      <SuccessPayment open={popup} isLoading={isLoading} />
-
       <div className="container mb-10 lg:px-20 mx-auto pt-32">
         <div className="pl-16">
           <h1 className="text-2xl pb-4 text-base ">My Cart</h1>
@@ -301,7 +296,7 @@ const Cart = () => {
                                 <div className="bg-white px-4 py-5 rounded-lg shadow-lg text-center w-48">
                                   <div className="mb-4">
                                     <img
-                                      className=" mx-auto rounded-full object-cover h-40 w-40 object-center"
+                                      className=" mx-auto rounded-full object-cover h-16 w-16 lg:h-40 lg:w-40 object-center"
                                       src={
                                         attach
                                           ? URL.createObjectURL(attach)

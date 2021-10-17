@@ -13,7 +13,7 @@ const Card: React.FC<{
       onClick={() => handleKlik(item.id, item)}
       className="bg-pink group relative rounded-lg o hover:shadow-sm transition duration-500 transform hover:scale-105 cursor-pointer"
     >
-      <div className="relative w-full mx-auto rounded-lg h-72 md:h-56 lg:h-80">
+      <div className="relative w-full mx-auto rounded-lg h-56 md:h-56 lg:h-80">
         <img
           src={item.image}
           alt=""

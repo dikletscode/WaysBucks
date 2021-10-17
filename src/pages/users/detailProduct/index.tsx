@@ -147,7 +147,7 @@ const Detail = () => {
             <div className="lg:w-1/2 w-full mx-auto object-center">
               <img
                 alt="ecommerce"
-                className=" h-99 w-60 object-cover lg:mx-0 mx-auto rounded border  lg:w-9/12 border-gray-200"
+                className="  object-cover lg:mx-0 mx-auto rounded border  lg:w-9/12 border-gray-200"
                 src={item.image}
               />
             </div>
@@ -160,14 +160,14 @@ const Detail = () => {
               </small>
               <div className="pt-9">
                 <p className="text-base pb-2  ">Toping</p>
-                <div
-                  className="flex h-80 overflow-y-auto  flex-wrap"
-                  style={{ width: "40rem" }}
-                >
+                <div className="flex h-80 w-96 items-center  lg:w-full overflow-y-auto  flex-wrap">
                   {toppings.length ? (
                     toppings.map((item, index) => {
                       return (
-                        <div key={index} className={`px-7`}>
+                        <div
+                          key={index}
+                          className={`relative flex lg:items-start items-center w-28 mx-auto rounded-lg h-5 md:h-56 lg:h-80`}
+                        >
                           <label htmlFor="">
                             <input
                               className="px-7 py-1 w-5 h-5 absolute  "

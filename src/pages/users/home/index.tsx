@@ -53,7 +53,7 @@ const HomePage = () => {
                         <div className="mx-auto lg:mx-0 w-4/5  border-b-2 border-green-500 opacity-25"></div>
                         <div className="w-full ">
                           <div className="lg:w-6/12 ">
-                            <p className="pt-8 px-3 text-xl font-sans">
+                            <p className="pt-8 px-3 lg:px-9 text-xl font-sans">
                               <p className="">
                                 Things are changing, but we’re still here for
                                 you
