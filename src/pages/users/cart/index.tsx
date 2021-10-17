@@ -39,7 +39,7 @@ const Cart = () => {
     new Array(cart?.length).fill(false)
   );
   const [openMobile, setMobile] = useState(false);
-  const [qty, setQty] = useState<number>(0);
+
   const history = useHistory();
   const formSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,9 +48,10 @@ const Cart = () => {
 
   const getProductCart = async () => {
     try {
+      setIsLoading(true);
       let res = await API.get("transaction");
       const data = res.data.product;
-
+      setIsLoading(false);
       data && setCart(data);
     } catch (error) {
       console.log(error);
@@ -76,6 +77,7 @@ const Cart = () => {
       setDisable(false);
     }
   };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setBuyyer((prevInput: typeof buyyer) => ({
       ...prevInput,
@@ -156,17 +158,17 @@ const Cart = () => {
   };
   useEffect(() => {
     const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-    const myMidtransClientKey = "your-client-key-goes-here";
+
     let scriptTag = document.createElement("script");
     scriptTag.src = midtransScriptUrl;
-    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
     document.body.appendChild(scriptTag);
     return () => {
       document.body.removeChild(scriptTag);
     };
   }, []);
+  useErrorHandler(() => {});
 
-  if (!cart.length) {
+  if (isLoading) {
     return <img src={gif.loading} alt="" />;
   }
   return (
