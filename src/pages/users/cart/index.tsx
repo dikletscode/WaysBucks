@@ -119,6 +119,7 @@ const Cart = () => {
                 (await API.post("transaction", form, {
                   headers: { "content-type": "multipart/form-data" },
                 }));
+              history.replace("profile");
             } catch (error) {
               handleError(error);
               console.log(error);

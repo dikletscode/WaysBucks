@@ -41,7 +41,7 @@ const Transaction: React.FC<{
                             />
 
                             <div
-                              className=" pl-6 block"
+                              className="hidden pl-6 lg:block"
                               style={{
                                 color: "#BD0707",
                                 fontFamily: "'Josefin Sans', sans-serif",
@@ -99,12 +99,19 @@ const Transaction: React.FC<{
                     </div>
                   </div>
                 </div>
+
+                <div
+                  className=" lg:hidden mx-auto  p-2 cursor-pointer text-base  "
+                  onClick={() => openDetail(item.id)}
+                >
+                  Detail
+                </div>
                 {item.history.length > 2 ? (
                   <div
-                    className="  mx-auto  p-2 cursor-pointer text-base  "
+                    className=" hidden lg:block mx-auto  p-2 cursor-pointer text-base  "
                     onClick={() => openDetail(item.id)}
                   >
-                    More Transactions
+                    More Transaction
                   </div>
                 ) : (
                   <></>
