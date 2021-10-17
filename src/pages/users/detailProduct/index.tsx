@@ -160,7 +160,7 @@ const Detail = () => {
               </small>
               <div className="pt-9">
                 <p className="text-base pb-2  ">Toping</p>
-                <div className="flex h-80 w-96 items-center  lg:w-full overflow-y-auto  flex-wrap">
+                <div className="flex h-80 w-11/12 items-center  lg:w-full overflow-y-auto  flex-wrap">
                   {toppings.length ? (
                     toppings.map((item, index) => {
                       return (

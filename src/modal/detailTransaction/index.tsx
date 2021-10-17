@@ -31,7 +31,8 @@ const DetailTransaction: FC<{ open: boolean; id: number; close: () => void }> =
             <div className=" fixed mx-auto  flex z-20 h-screen w-screen items-center  bg-darkTransparent ">
               <div
                 onMouseLeave={close}
-                className="bg-white  pt-10 flex flex-col justify-start items-center h-5/6 overflow-y-scroll  w-2/3 mx-auto"
+                onClick={close}
+                className="bg-white  pt-10 flex flex-col justify-start items-center h-5/6 overflow-y-scroll  w-10/12 mx-auto"
               >
                 {data ? (
                   <>
@@ -46,7 +47,7 @@ const DetailTransaction: FC<{ open: boolean; id: number; close: () => void }> =
                       />
                     </div>
                     <div
-                      className={`bg-white flex flex-wrap justify-around  pt-10  mx-auto`}
+                      className={`bg-white flex space-x-4 flex-wrap justify-around  pt-10  mx-auto`}
                     >
                       {data.history ? (
                         data.history.map((item2, index) => {

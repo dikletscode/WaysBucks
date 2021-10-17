@@ -32,12 +32,12 @@ const Transaction: React.FC<{
                         return (
                           <div
                             key={index}
-                            className="flex w-full items-center  p-6  "
+                            className="flex w-full items-center  py-2 pl-3  "
                           >
                             <img
                               src={item2.product?.image}
                               alt=""
-                              className=" w-24 h-36 object-cover rounded-lg"
+                              className=" w-28 h-36 object-cover rounded-lg"
                             />
 
                             <div

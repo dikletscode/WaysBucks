@@ -294,7 +294,7 @@ const Cart = () => {
                             ></textarea>
                             <div className="bg-cream mx-auto  w-48  mt-4 border-2 border-base">
                               <div className="py-3 center mx-auto">
-                                <div className="bg-white px-4 py-5 rounded-lg shadow-lg text-center w-48">
+                                <div className="bg-cream px-4 py-5 rounded-lg shadow-lg text-center w-48">
                                   <div className="mb-4">
                                     <img
                                       className=" mx-auto rounded-full object-cover h-16 w-16 lg:h-40 lg:w-40 object-center"
@@ -308,7 +308,7 @@ const Cart = () => {
                                   </div>
                                   <label className="cursor-pointer mt-6">
                                     <span className="mt-2 leading-normal px-4 py-2 bg-base text-white text-sm rounded-full">
-                                      Select Avatar
+                                      Attachment
                                     </span>
                                     <input
                                       type="file"
