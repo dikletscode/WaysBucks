@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from "react";
+import React, { ChangeEvent, FC } from "react";
 
 interface InputInterface {
   name?: string;
@@ -11,6 +11,7 @@ interface InputInterface {
   notValid?: boolean;
   disabled?: boolean;
   display?: string;
+  children?: React.ReactNode;
 }
 
 const Input: FC<InputInterface> = (props) => {
@@ -31,6 +32,7 @@ const Input: FC<InputInterface> = (props) => {
         } rounded-md w-full`}
         required
       />
+      {props.children}
     </div>
   );
 };

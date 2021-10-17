@@ -14,8 +14,6 @@ const PrivateRoute = ({
   restricted,
   ...rest
 }: ProtectedRouteProps) => {
-  // const jsonValue = JSON.parse(localStorage.getItem("_basicInfo") || "{}");
-  // const isLogin = jsonValue.token != undefined ? true : false;
   const { state } = useContext(AuthContext);
 
   return (

@@ -12,7 +12,7 @@ const SuccessPayment = ({
 }) => {
   let history = useHistory();
   if (open && isLoading == false) {
-    setTimeout(() => history.push("/profile"), 4000);
+    setTimeout(() => history.replace("/profile"), 4000);
   }
   return (
     <>

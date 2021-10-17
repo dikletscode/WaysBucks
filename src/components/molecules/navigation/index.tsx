@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AuthContext, { CartContext } from "../../../context/context";
 import { icon, image } from "../../../assets/assetsRegister";
 import { API } from "../../../config/axios";
-import { ProductTopping } from "../../../pages/users/detailProduct";
+import { ProductTopping } from "../../../types/product";
 
 const Navigation = ({
   toogle,
@@ -23,8 +23,7 @@ const Navigation = ({
         let res = await API.get("transaction");
         const data: ProductTopping[] = res.data.product;
         if (data) {
-          const qty = data.reduce((item, item2) => item + item2.qty, 0);
-          increment(qty);
+          increment(data.length);
         }
       } catch (error) {
         console.log(error, "909090909");
@@ -42,27 +41,18 @@ const Navigation = ({
           </Link>
         </div>
       ) : (
-        <>
-          <div className="pr-5 flex items-center ">
-            <Link to="/cart">
-              {cartState == 0 ? (
-                <></>
-              ) : (
-                <div
-                  style={{
-                    background: "#F13F3F",
-                    right: "7.3rem",
-                    textAlign: "center",
-                  }}
-                  className="rounded-full flex items-center h-5 w-5 text-center  absolute  text-white"
-                >
-                  <p className="mx-auto text-sm font-semibold">{cartState}</p>
-                </div>
-              )}
-              <img src={icon.cart} alt="" className="object-cover h-8 w-8" />
-            </Link>
-          </div>
-        </>
+        <div className="w-10 h-10 relative mr-4 flex items-center ">
+          {cartState == 0 ? (
+            <></>
+          ) : (
+            <div className="rounded-full top-0  right-0 bg-red-500 flex items-center h-5 w-5 text-center  absolute  text-white">
+              <p className="mx-auto text-sm font-semibold">{cartState}</p>
+            </div>
+          )}
+          <Link to="/cart">
+            <img src={icon.cart} alt="" className=" h-10  w-10 object-cover " />
+          </Link>
+        </div>
       )}
       <div>
         <img

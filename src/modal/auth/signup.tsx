@@ -1,8 +1,16 @@
-import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from "react";
 import { Input, Submit, MessageValidation } from "../../components/atoms";
 import { LoginProps } from "./login";
 import { Wrapper } from "../../components/molecules";
 import { API } from "../../config/axios";
+import { ReactComponent as Eye } from "../../assets/images/eye.svg";
 
 const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
   const userInit = {
@@ -11,6 +19,12 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
     fullname: "",
   };
   const [user, setUser] = useState(userInit);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const eyeToggleClick = (e: MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setShowPassword(showPassword ? false : true);
+  };
 
   const isErrorInit = {
     fullname: false,
@@ -24,12 +38,6 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
     server: "",
     email: "",
     password: "",
-  };
-
-  const clearState = () => {
-    setMessageError(messageInit);
-    setError(isErrorInit);
-    setSuccess("");
   };
 
   const [error, setError] = useState(isErrorInit);
@@ -69,20 +77,21 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
         setUser(userInit);
       } catch (error: any) {
         setError((prev) => ({ ...prev, server: true }));
-        if (error.response && error.response.status == 409) {
+        if (error.response) {
           setMessageError((prev) => ({
             ...prev,
-            server: "Email has been used",
-          }));
-        } else {
-          setMessageError((prev) => ({
-            ...prev,
-            server: "an error occured!",
+            server: error.response.data.message,
           }));
         }
       }
     };
     postData();
+  };
+
+  const clearState = () => {
+    setMessageError(messageInit);
+    setError(isErrorInit);
+    setSuccess("");
   };
   useEffect(() => {
     if (!isOpen) {
@@ -139,15 +148,21 @@ const Signup: FC<LoginProps> = ({ isOpen, switchModal }) => {
               error={error.password}
             />
             <Input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={user.password}
               name="password"
               nameField="Password"
               notValid={error.password}
               pattern=".{6,}"
               change={handleChange}
-              className="py-1"
-            />
+              className="py-1 relative"
+            >
+              <Eye
+                fill={showPassword ? "#BD0707" : "grey"}
+                onClick={(e) => eyeToggleClick(e)}
+                className="absolute right-3 top-1/3"
+              />
+            </Input>
 
             <Submit
               value="Register"

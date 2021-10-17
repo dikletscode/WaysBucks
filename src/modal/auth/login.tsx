@@ -5,6 +5,7 @@ import {
   useContext,
   useState,
   useEffect,
+  MouseEvent,
 } from "react";
 import { Input, Submit, MessageValidation } from "../../components/atoms";
 import AuthContext from "../../context/context";
@@ -13,6 +14,8 @@ import { Redirect } from "react-router-dom";
 import Congrats from "../alert/congrats";
 import { Wrapper } from "../../components/molecules";
 import { API } from "../../config/axios";
+import { ReactComponent as Eye } from "../../assets/images/eye.svg";
+import { useErrorHandler } from "react-error-boundary";
 
 export interface LoginProps {
   isOpen: boolean;
@@ -26,7 +29,6 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
     password: "",
   };
   const [user, setUser] = useState(userInit);
-
   const isErrorInit = {
     server: false,
     email: false,
@@ -37,6 +39,12 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
     server: "",
     email: "",
     password: "",
+  };
+  const [showPassword, setShowPassword] = useState(false);
+
+  const eyeToggleClick = (e: MouseEvent<HTMLOrSVGElement>) => {
+    e.stopPropagation();
+    setShowPassword(showPassword ? false : true);
   };
 
   const clearState = () => {
@@ -75,7 +83,7 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const mockFetch = async () => {
+    const login = async () => {
       try {
         let res = await API.post("login", user);
         localStorage.setItem("_user", JSON.stringify(res.data));
@@ -103,7 +111,7 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
         }
       }
     };
-    mockFetch();
+    login();
   };
   console.log(state);
 
@@ -154,15 +162,21 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
                   />
 
                   <Input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={user.password}
                     name="password"
                     nameField="Password"
                     change={handleChange}
                     pattern=".{6,}"
                     notValid={error.password}
-                    className="py-1"
-                  />
+                    className="py-1 relative"
+                  >
+                    <Eye
+                      fill={showPassword ? "#BD0707" : "grey"}
+                      onClick={(e) => eyeToggleClick(e)}
+                      className="absolute right-3 top-1/3"
+                    />
+                  </Input>
                   <MessageValidation
                     message={messageError.password}
                     error={error.password}
@@ -173,11 +187,11 @@ const Login: FC<LoginProps> = ({ isOpen, switchModal }) => {
                   />
                 </form>
                 <p className="text-center">
-                  Already have an account ? Klik{" "}
+                  Already have an account ? Klik
                   <span className="cursor-pointer" onClick={switchModal}>
                     Here
                   </span>
-                </p>{" "}
+                </p>
               </Wrapper>
             </>
           )}

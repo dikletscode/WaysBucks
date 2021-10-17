@@ -29,14 +29,14 @@ const HomePage = () => {
     <>
       <>
         <div className="bg-white ">
-          <main className="pt-32">
+          <main className="pt-20 lg:pt-28">
             <div className="container px-4  mx-auto lg:px-20  ">
               <div className="w-full lg:relative overflow-hidden ">
                 <div className=" flex flex-wrap">
-                  <div className=" w-full flex lg:block lg:bg-dBanner bg-no-repeat pt-14 justify-center px-10 items-center lg:h-96 mx-auto  lg:my-0">
+                  <div className=" w-full flex   lg:block lg:bg-dBanner bg-no-repeat pt-14 justify-center  items-center lg:h-96 mx-auto  lg:my-0">
                     <div
                       id="profile"
-                      className="  flex bg-no-repeat bg-mBanner w-full lg:bg-none text-center lg:text-left  text-white rounded-lg lg:rounded-l-lg lg:rounded-r-none    lg:mx-0"
+                      className="  flex  bg-mBanner bg-repeat-y w-full lg:bg-none text-center lg:text-left  text-white rounded-lg lg:rounded-l-lg lg:rounded-r-none    lg:mx-0"
                     >
                       <div className="p-4  w-full text-center lg:text-left">
                         <div className="block lg:hidden  rounded-full  mx-auto -mt-16 h-48 w-48 bg-cover bg-center">
@@ -46,19 +46,19 @@ const HomePage = () => {
                           />
                         </div>
 
-                        <h1 className="text-3xl font-bold pt-8 lg:pt-0">
+                        <h1 className="text-6xl font-bold   lg:px-9">
                           WAYSBUCK
                         </h1>
 
-                        <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
+                        <div className="mx-auto lg:mx-0 w-4/5  border-b-2 border-green-500 opacity-25"></div>
                         <div className="w-full ">
                           <div className="lg:w-6/12 ">
-                            <p className="pt-8 text-xl">
+                            <p className="pt-8 px-9 text-xl font-sans">
                               <p className="">
                                 Things are changing, but we’re still here for
                                 you
                               </p>
-                              <p className="mt-2 g">
+                              <p className="mt-2 ">
                                 We have temporarily closed our in-store cafes,
                                 but select grocery and drive-thru locations
                                 remaining open. Waysbucks Drivers is also
@@ -86,9 +86,6 @@ const HomePage = () => {
                         would like to deliver quality coffee beans and tasty to
                         you."
                       </p>
-                      <button className="flex items-center mt-4  text-sm uppercase font-medium rounded hover:underline focus:outline-none">
-                        <span>Shop Now</span>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -104,9 +101,6 @@ const HomePage = () => {
                         and the experience around coffee, we designed modern
                         contemporary store environments;
                       </p>
-                      <button className="flex items-center mt-4 text-white text-sm uppercase font-medium rounded hover:underline focus:outline-none">
-                        <span>Shop Now</span>
-                      </button>
                     </div>
                   </div>
                 </div>

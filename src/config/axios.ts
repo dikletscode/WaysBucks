@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "http://localhost:2021/api/v1/",
+  baseURL: "https://waysback.herokuapp.com/api/v1/",
 });
 
 API.interceptors.response.use(
@@ -9,9 +9,12 @@ API.interceptors.response.use(
     return Promise.resolve(res);
   },
   (err) => {
-    if (err.response!.status === 403) {
+    console.log(err, "Err");
+    if (err.response && err.response!.status === 403) {
       localStorage.removeItem("_user");
       window.location.reload();
+    } else if (err.response && err.response!.status === 500) {
+      window.location.replace("/error");
     } else {
       return Promise.reject(err);
     }

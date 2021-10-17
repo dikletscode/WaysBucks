@@ -6,9 +6,9 @@ const Status: FC<{ borderColor: string; textColor: string; status: string }> =
   ({ borderColor, textColor, status }) => {
     return (
       <div
-        className={`"border-2 cursor-pointer text-center ${borderColor}   w-40"`}
+        className={`border-2 cursor-pointer text-center ${borderColor}   w-40`}
       >
-        <p className={`"${textColor} font-bold"`}>{status}</p>
+        <p className={`${textColor} font-bold`}>{status}</p>
       </div>
     );
   };
@@ -18,9 +18,9 @@ export const StatusTransac: FC<{ status: string }> = ({ status }) => {
     case enumTransaction.WAIT:
       return (
         <Status
-          borderColor="border-blue-400"
+          borderColor="border-yellow-400"
           status={status}
-          textColor="text-blue-400"
+          textColor="text-yellow-400"
         />
       );
     case enumTransaction.SUCCESS:

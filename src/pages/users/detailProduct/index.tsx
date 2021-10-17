@@ -1,48 +1,20 @@
-import { ChangeEvent, useMemo } from "react";
+import { useMemo } from "react";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { CartContext } from "../../../context/context";
 
 import { Submit } from "../../../components/atoms";
 import { FailedRequest } from "../../../modal";
-
+import calculate from "../../../utils/calculateArr";
 import convert from "../../../utils/convertCurrency";
 import getSelected from "../../../utils/getSelected";
-import { ProductTypes } from "../../../types/product";
+import {
+  ProductTopping,
+  ProductTypes,
+  ToppingTypes,
+} from "../../../types/product";
 import checkIsExist from "../../../utils/checkIsExist";
 import { API } from "../../../config/axios";
-
-const calculate = (arr: number[], arr2: number[]) => {
-  let a = 0;
-  arr.map((item, index) => {
-    a += item * arr2[index];
-  });
-  return a;
-};
-export interface Product {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-}
-
-export interface ProductTopping {
-  id: number;
-  qty: number;
-  products: Product;
-  toppings: Product[];
-  price: number;
-  users: {
-    fullname: string;
-    email: string;
-  };
-}
-export type ToppingTypes = {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-};
 
 const Detail = () => {
   const item: ProductTypes = useLocation<ProductTypes>().state;
@@ -54,11 +26,12 @@ const Detail = () => {
   const { id } = useParams<{ id: string }>();
   const [idExist, setIdExist] = useState<number | null>(null);
   const { cartState, increment } = useContext(CartContext);
+  const [isUpdateQty, setUpdateQty] = useState(false);
   const [popUP, setPopUP] = useState(false);
   const fetch = async () => {
     try {
       let res = await API.get("toppings");
-      let data: ToppingTypes[] = res.data.product;
+      let data = res.data.product;
       if (data) {
         setToppings(data);
       }
@@ -74,15 +47,14 @@ const Detail = () => {
   const getProductCart = async () => {
     try {
       let res = await API.get("transaction");
-      let data: ProductTopping[] = res.data.products;
-      if (data) {
-        increment(data?.length);
-      }
+      let data: ProductTopping[] = res.data.product;
 
       if (data) {
+        increment(data?.length);
         data.map((topping) => {
           if (topping.products.id === parseInt(id)) {
             let idStr = topping.toppings.map((toppingId) => toppingId.id);
+            console.log(idStr, toppingSelected, "s");
             if (checkIsExist(idStr, toppingSelected)) {
               setIdExist(topping.id);
             } else {
@@ -102,7 +74,7 @@ const Detail = () => {
 
   useEffect(() => {
     getProductCart();
-  }, [toppingSelected]);
+  }, [toppingSelected, isUpdateQty]);
 
   useEffect(() => {
     setKlik([...new Array(toppings.length).fill(false)]);
@@ -125,8 +97,6 @@ const Detail = () => {
             price: totalCalculate,
             qty: amount,
           });
-          increment(amount);
-          console.log(idExist);
         } else {
           await API.post("cart", {
             id: parseInt(id),
@@ -135,7 +105,7 @@ const Detail = () => {
             price: totalCalculate,
           });
 
-          increment(amount);
+          setUpdateQty(true);
         }
       } catch (error) {
         console.log(error);
@@ -177,7 +147,7 @@ const Detail = () => {
             <div className="lg:w-1/2 w-full mx-auto object-center">
               <img
                 alt="ecommerce"
-                className="  object-cover lg:mx-0 mx-auto rounded border  lg:w-9/12 border-gray-200"
+                className=" h-99 w-60 object-cover lg:mx-0 mx-auto rounded border  lg:w-9/12 border-gray-200"
                 src={item.image}
               />
             </div>

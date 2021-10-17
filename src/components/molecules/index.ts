@@ -6,9 +6,11 @@ import Message from "./messages";
 import Footer from "./footer";
 import Card from "./card";
 import StatusTransac from "./statusColor";
+import ErrorFallback from "./errorBoundary";
 
 export {
   DropDown,
+  ErrorFallback,
   Wrapper,
   Navigation,
   Header,

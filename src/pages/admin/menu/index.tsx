@@ -19,17 +19,6 @@ const MenuAdmin = () => {
     <>
       <div className="min-h-screen pt-14 flex">
         <div className="py-12 px-10 w-1/4">
-          <div className="flex space-2 items-center border-b-2 pb-4">
-            <img src={image.logo} alt="" className="h-16 w-16 object-cover" />
-
-            <div className="ml-3">
-              <h1 className="text-3xl font-bold text-base">Admin</h1>
-              <p className="text-center text-sm text-base mt-1 font-serif">
-                DASHBOARD
-              </p>
-            </div>
-          </div>
-
           <div className="mt-8">
             <ul className="space-y-10">
               <li>

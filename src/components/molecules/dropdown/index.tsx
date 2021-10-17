@@ -38,8 +38,7 @@ const DropDown = ({
   return (
     <>
       <div
-        className="absolute bg-white shadow-main w-40 "
-        style={{ right: "4.2rem", top: "5rem" }}
+        className="absolute bg-white shadow-main w-40 right-0 top-12 "
         onMouseLeave={close}
       >
         {state.isAdmin ? (

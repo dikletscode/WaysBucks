@@ -15,18 +15,19 @@ import {
   AllProducts,
   HomePage,
   ProfileWithErrorBoundary,
-  Cart,
+  Transaction,
   Detail,
 } from "./pages";
 import { role } from "./types/roleEnum";
-import AuthContext from "./context/context";
+import AuthContext, { CartContext } from "./context/context";
 import PrivateRoute from "./router/private";
 import { API, setAuthToken } from "./config/axios";
+import ErrorPage from "./pages/error";
 
 function App() {
   const { state, dispatch } = useContext(AuthContext);
 
-  const getProfile = async () => {
+  const getUser = async () => {
     try {
       let res = await API.get("user");
       let data = res.data.users;
@@ -53,7 +54,7 @@ function App() {
     if (loginUser) {
       const data = JSON.parse(loginUser);
       setAuthToken(data.token);
-      getProfile();
+      getUser();
     } else {
       setAuthToken(null);
       dispatch({ type: "INVALID_USER", payload: null });
@@ -69,7 +70,8 @@ function App() {
       <Header />
       <Switch>
         <Route component={HomePage} path="/" exact />
-        <PrivateRoute component={Cart} path="/cart" exact />
+        <Route component={ErrorPage} path="/error" exact />
+        <PrivateRoute component={Transaction} path="/cart" />
         <PrivateRoute component={Detail} path="/product/:id" exact />
         <PrivateRoute component={AllProducts} path="/allproducts" exact />
         <PrivateRoute

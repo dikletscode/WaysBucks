@@ -12,6 +12,7 @@ import { FailedRequest, DetailTransaction, Confirmation } from "../../../modal";
 import Transaction from "./Transaction";
 import { ErrorBoundary, withErrorBoundary } from "react-error-boundary";
 import { API } from "../../../config/axios";
+import { ErrorFallback } from "../../../components";
 
 export interface ProfileType {
   id: string;
@@ -25,8 +26,7 @@ export interface ProfileType {
 
 const UserProfile = () => {
   const [transaction, setTransaction] = useState<HistoryTransaction[]>([]);
-  const loginUser = localStorage.getItem("_user");
-  const { state, dispatch } = useContext(AuthContext);
+  const { state } = useContext(AuthContext);
 
   const [user, setUser] = useState<ProfileType | null>(null);
   const [isError, setError] = useState(false);
@@ -98,13 +98,13 @@ const UserProfile = () => {
       />
       <div className="container flex pt-32  mx-auto  justify-between flex-wrap px-11 ">
         <FailedRequest
-          error="an error occured"
+          error="File Rejected"
           open={isError}
           close={() => setError(false)}
         />
 
         <Profile user={state.data} handleImage={handleImage} />
-        <div className=" lg:w-1/2   ">
+        <div className="w-full lg:w-1/2   ">
           <h2 className="text-base text-3xl pb-5">My Transaction</h2>
 
           <div
@@ -122,21 +122,6 @@ const UserProfile = () => {
     </>
   );
 };
-function ErrorFallback({
-  error,
-  resetErrorBoundary,
-}: {
-  error: any;
-  resetErrorBoundary: any;
-}) {
-  return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-}
 
 const ProfileWithErrorBoundary = withErrorBoundary(UserProfile, {
   FallbackComponent: ErrorFallback,

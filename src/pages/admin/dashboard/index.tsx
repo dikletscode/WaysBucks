@@ -52,6 +52,7 @@ const Dashboard = () => {
       ) : (
         <></>
       )}
+
       <div className="pt-24  container mx-auto">
         <div className="px-7 mx-auto ">
           <h1 className="font-light text-base text-2xl">Income Transaction</h1>

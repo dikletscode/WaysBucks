@@ -16,12 +16,14 @@ import dashboard from "./images/dasboard.png";
 import empty from "./images/empty.gif";
 import check from "./images/check.png";
 import cancel from "./images/cancel.png";
-import cart from "./images/cart.png";
+import cart from "./images/cart.svg";
 import defaultProfile from "./images/defaultProfile.png";
 import attachment from "./images/attach2.png";
 import topping2 from "./images/topping2.png";
 import warn from "./images/warn.png";
 import paid from "./images/paid.jpg";
+import emptyCart from "./images/empty_cart.png";
+import error from "./images/error.png";
 
 export const icon = {
   addProduct: addProduct,
@@ -34,6 +36,7 @@ export const icon = {
   cart: cart,
   defaultProfile: defaultProfile,
   warning: warn,
+  error: error,
 };
 
 export const gif = {
@@ -50,7 +53,7 @@ export const image = {
   cancel: cancel,
   attach: attachment,
   topping: topping2,
-
+  emptyCart: emptyCart,
   logo: logo,
   paid: paid,
 };

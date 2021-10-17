@@ -23,9 +23,9 @@ const ListTopping = () => {
   }, []);
 
   return (
-    <div className=" flex  flex-col mt-24   mx md:flex-row h-99 overflow-y-auto justify-items-start  mx-auto pl-6  flex-wrap gap-0 ">
+    <div className=" flex h-full  flex-col mt-5 justify-center  items-center mx md:flex-row  overflow-y-auto justify-items-start  mx-auto pl-6  flex-wrap  ">
       {topping.map((item) => (
-        <div className="p-10 w-96 " key={item.id}>
+        <div className="p-10 w-80 " key={item.id}>
           <div className="bg-white max-w-xs  flex items-center flex-col shadow-lg h-72  mx-auto border-b-4 border-base rounded-2xl overflow-hidden  hover:shadow-2xl transition duration-500 transform hover:scale-105 cursor-pointer">
             <div className="bg-base w-5/12 text-center  flex h-10  items-center ">
               <p className=" text-white uppercase mx-auto">{item.title}</p>

@@ -24,42 +24,44 @@ const Transaction: React.FC<{
         transaction.map((item, index) => {
           return (
             <div key={index} className=" pb-8">
-              <div className="bg-red-200 w-full flex flex-col items-center justify-between">
+              <div className="bg-red-200  flex flex-col items-center justify-between">
                 <div className="w-full flex items-center justify-between">
                   <div className=" flex flex-col items-center ">
                     {item.history.map((item2, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="flex w-full items-center  p-6  "
-                        >
-                          <img
-                            src={item2.product?.image}
-                            alt=""
-                            className=" w-24 h-36 object-cover rounded-lg"
-                          />
-
+                      if (index < 2) {
+                        return (
                           <div
-                            className=" pl-6 hidden lg:block"
-                            style={{
-                              color: "#BD0707",
-                              fontFamily: "'Josefin Sans', sans-serif",
-                            }}
+                            key={index}
+                            className="flex w-full items-center  p-6  "
                           >
-                            <h2 className="text-base font-bold">
-                              {item2.product?.title || ""}
-                            </h2>
-                            <p>{date(item2.createdAt)}</p>
-                            <p>
-                              Topping:
-                              {item2.toppings?.map((item3) => {
-                                return " " + item3.title + ",";
-                              })}
-                            </p>
-                            <p>Rp.{convert(item2.price.toString())}</p>
+                            <img
+                              src={item2.product?.image}
+                              alt=""
+                              className=" w-24 h-36 object-cover rounded-lg"
+                            />
+
+                            <div
+                              className=" pl-6 block"
+                              style={{
+                                color: "#BD0707",
+                                fontFamily: "'Josefin Sans', sans-serif",
+                              }}
+                            >
+                              <h2 className="text-base font-bold">
+                                {item2.product?.title || ""}
+                              </h2>
+                              <p>{date(item2.createdAt)}</p>
+                              <p>
+                                Topping:
+                                {item2.toppings?.map((item3) => {
+                                  return " " + item3.title + ",";
+                                })}
+                              </p>
+                              <p>Rp.{convert(item2.price.toString())}</p>
+                            </div>
                           </div>
-                        </div>
-                      );
+                        );
+                      }
                     })}
                   </div>
                   <div className="flex items-center flex-wrap py-10 pr-5">
@@ -76,6 +78,7 @@ const Transaction: React.FC<{
                             totalPrice: item.totalPrice,
                             userOrder: item.orderUser.address,
                           })}
+                          size={100}
                           bgColor="rgba(254, 202, 202,0.2)"
                         />
                       </div>
@@ -96,12 +99,16 @@ const Transaction: React.FC<{
                     </div>
                   </div>
                 </div>
-                <div
-                  className="  mx-auto  p-2 cursor-pointer text-base  "
-                  onClick={() => openDetail(item.id)}
-                >
-                  detail
-                </div>
+                {item.history.length > 2 ? (
+                  <div
+                    className="  mx-auto  p-2 cursor-pointer text-base  "
+                    onClick={() => openDetail(item.id)}
+                  >
+                    More Transactions
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           );
