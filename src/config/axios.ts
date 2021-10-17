@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "https://waysback.herokuapp.com/api/v1/",
+  baseURL: "https://waysbuck.herokuapp.com/api/v1/",
 });
 
 API.interceptors.response.use(
