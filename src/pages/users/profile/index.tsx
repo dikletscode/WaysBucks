@@ -27,7 +27,6 @@ export interface ProfileType {
 const UserProfile = () => {
   const [transaction, setTransaction] = useState<HistoryTransaction[]>([]);
   const { state, dispatch } = useContext(AuthContext);
-
   const [user, setUser] = useState<ProfileType | null>(null);
   const [isError, setError] = useState(false);
   const [input, setInput] = useState(user?.profile.fullname || "");
