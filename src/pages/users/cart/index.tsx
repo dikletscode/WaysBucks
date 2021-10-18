@@ -166,7 +166,6 @@ const Cart = () => {
       document.body.removeChild(scriptTag);
     };
   }, []);
-  useErrorHandler(() => {});
 
   if (isLoading) {
     return <img src={gif.loading} alt="" />;
