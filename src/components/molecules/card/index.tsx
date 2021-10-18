@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { LazyImages } from "..";
 import { ProductTypes } from "../../../types/product";
 import convert from "../../../utils/convertCurrency";
 
@@ -14,7 +15,7 @@ const Card: React.FC<{
       className="bg-pink group relative rounded-lg o hover:shadow-sm transition duration-500 transform hover:scale-105 cursor-pointer"
     >
       <div className="relative w-full mx-auto rounded-lg h-56 md:h-56 lg:h-80">
-        <img
+        <LazyImages
           src={item.image}
           alt=""
           className="w-full h-full rounded-lg   object-cover"

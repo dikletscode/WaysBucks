@@ -24,6 +24,7 @@ import warn from "./images/warn.png";
 import paid from "./images/paid.jpg";
 import emptyCart from "./images/empty_cart.png";
 import error from "./images/error.png";
+import spinner from "./images/spinner.gif";
 
 export const icon = {
   addProduct: addProduct,
@@ -42,6 +43,7 @@ export const icon = {
 export const gif = {
   loading: loading,
   success: success,
+  spinner: spinner,
 };
 
 export const image = {

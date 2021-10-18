@@ -101,7 +101,7 @@ const UserProfile = () => {
         id={id}
         close={() => setOpenDetail(false)}
       />
-      <div className="container flex pt-32  mx-auto  justify-between flex-wrap px-11 ">
+      <div className="container flex pt-32  mx-auto  justify-between flex-wrap px:3 lg:px-11 ">
         <FailedRequest
           error="File Rejected"
           open={isError}

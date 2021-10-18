@@ -7,6 +7,7 @@ import Footer from "./footer";
 import Card from "./card";
 import StatusTransac from "./statusColor";
 import ErrorFallback from "./errorBoundary";
+import LazyImages from "./LazyImages";
 
 export {
   DropDown,
@@ -18,4 +19,5 @@ export {
   Footer,
   Card,
   StatusTransac,
+  LazyImages,
 };

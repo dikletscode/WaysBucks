@@ -4,6 +4,7 @@ import { HistoryTransaction } from "../../types/transaction";
 import { gif } from "../../assets/assetsRegister";
 import convert from "../../utils/convertCurrency";
 import { API } from "../../config/axios";
+import { LazyImages } from "../../components";
 
 const DetailTransaction: FC<{ open: boolean; id: number; close: () => void }> =
   ({ open, id, close }) => {
@@ -28,10 +29,12 @@ const DetailTransaction: FC<{ open: boolean; id: number; close: () => void }> =
       <>
         {open ? (
           <>
-            <div className=" fixed mx-auto  flex z-20 h-screen w-screen items-center  bg-darkTransparent ">
+            <div
+              onClick={close}
+              className=" fixed mx-auto  flex z-20 h-screen w-screen items-center  bg-darkTransparent "
+            >
               <div
                 onMouseLeave={close}
-                onClick={close}
                 className="bg-white  pt-10 flex flex-col justify-start items-center h-5/6 overflow-y-scroll  w-10/12 mx-auto"
               >
                 {data ? (
@@ -52,8 +55,11 @@ const DetailTransaction: FC<{ open: boolean; id: number; close: () => void }> =
                       {data.history ? (
                         data.history.map((item2, index) => {
                           return (
-                            <div className=" mx-auto bg-whiteshadow-md h-96  my-5 rounded-3xl flex flex-col justify-between  items-center overflow-hidden sm:flex-row sm:h-52 sm:w-3/5 md:w-96">
-                              <img
+                            <div
+                              key={index}
+                              className=" mx-auto bg-whiteshadow-md h-96  my-5 rounded-3xl flex flex-col justify-between  items-center overflow-hidden sm:flex-row sm:h-52 sm:w-3/5 md:w-96"
+                            >
+                              <LazyImages
                                 className="h-1/2 w-full sm:h-full sm:w-1/2 object-cover"
                                 src={item2.product.image}
                                 alt="image"

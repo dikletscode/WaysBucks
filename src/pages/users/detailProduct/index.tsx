@@ -15,6 +15,7 @@ import {
 } from "../../../types/product";
 import checkIsExist from "../../../utils/checkIsExist";
 import { API } from "../../../config/axios";
+import { LazyImages } from "../../../components";
 
 const Detail = () => {
   const item: ProductTypes = useLocation<ProductTypes>().state;
@@ -175,7 +176,12 @@ const Detail = () => {
                               key={item.id}
                               onChange={() => handleCheck(index)}
                             />
-                            <img src={item.image} alt="" className="h-24 p-1" />
+                            <LazyImages
+                              src={item.image}
+                              alt={item.title}
+                              className="h-24 p-1"
+                            />
+
                             <p style={{ textAlign: "center" }}>
                               {item.title} <br />
                               <small style={{ color: "red" }}>
